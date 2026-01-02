@@ -1,28 +1,26 @@
 :root {
   --background: linear-gradient(
-  to bottom,
-  #6BA197,
-  #8ABCB3
-);
-  --foreground: linear-gradient(
-  to bottom,
-  #6BA197,
-  #8ABCB3
-);
+    135deg,
+    #1a3a3a 0%,
+    #2d5a5a 25%,
+    #1e4a4a 50%,
+    #2a4f4f 75%,
+    #1a3636 100%
+  );
+  --foreground: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: linear-gradient(
-  to bottom,
-  #6BA197,
-  #8ABCB3
-);
-    --foreground: linear-gradient(
-  to bottom,
-  #6BA197,
-  #8ABCB3
-);
+      160deg,
+      #1a3a3a 0%,
+      #2d5a5a 25%,
+      #1e4a4a 50%,
+      #2a4f4f 75%,
+      #1a3636 100%
+    );
+    --foreground: #ffffff;
   }
 }
 
@@ -34,10 +32,61 @@ body {
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background: #1a3636;
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  overflow: hidden;
+}
+
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle 80vw at center bottom,
+    rgba(45, 90, 90, 0.8) 0%,
+    rgba(30, 74, 74, 0.6) 20%,
+    rgba(42, 79, 79, 0.4) 40%,
+    rgba(26, 54, 54, 0.2) 60%,
+    rgba(26, 58, 58, 0) 80%
+  );
+  animation: waveVibrate 10s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle 75vw at center bottom,
+    rgba(61, 120, 120, 0.6) 0%,
+    rgba(45, 95, 95, 0.4) 25%,
+    rgba(35, 80, 80, 0.3) 45%,
+    rgba(28, 60, 60, 0.1) 65%,
+    transparent 85%
+  );
+  animation: waveVibrate 10s cubic-bezier(0.4, 0, 0.2, 1) infinite 5s;
+  z-index: 0;
+}
+
+@keyframes waveVibrate {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
 }
 
 * {

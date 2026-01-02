@@ -1,0 +1,13 @@
+.items{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+.navBar{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: fixed;
+    top: 50px;
+    width: 80%;
+}
