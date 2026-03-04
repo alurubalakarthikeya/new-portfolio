@@ -1,20 +1,24 @@
-import Image from "next/image";
-import styles from "./page.module.css";
-import NavBar from "./components/navbar";
-
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import About from "./components/About";
+import Skills from "./components/Skills";
+import Certifications from "./components/Certifications";
+import Projects from "./components/Projects";
+import Contact from "./components/Contact";
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-
-      <Image
-        src="/main-img.png"
-        alt="Main character"
-        width={500}
-        height={500}
-        className={styles.mainImg}
-        priority
-      />
-    </div>
+    <>
+      <Navbar />
+      <main>
+        <br />
+        <Hero />
+        <About />
+        <Skills />
+        <Certifications />
+        <Projects />
+        <Contact />
+      </main>
+    </>
   );
 }
