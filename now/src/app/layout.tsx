@@ -5,7 +5,7 @@ import Footer from "./components/Footer";
 import Cursor from "./components/Cursor";
 
 export const metadata: Metadata = {
-  title: "Karthikeya | AI & Web Developer",
+  title: "Karthikeya | Home",
   description: "Portfolio of Bala Karthikeya, Full Stack & AI Developer",
 };
 
