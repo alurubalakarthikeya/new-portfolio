@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import MobileNav from "./components/MobileNav";
 import Footer from "./components/Footer";
 import Cursor from "./components/Cursor";
+import MobileNav from "./components/MobileNav";
 
 export const metadata: Metadata = {
   title: "Karthikeya | Home",
