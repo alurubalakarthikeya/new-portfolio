@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Suspense } from "react";
 import "./globals.css";
 import Cursor from "./components/Cursor";
 import MobileNav from "./components/MobileNav";
@@ -38,7 +39,9 @@ export default function RootLayout({
       </head>
       <body className={`${doto.variable} antialiased min-h-screen flex flex-col cursor-none`}>
         <Cursor />
-        <SearchKeywordHighlighter />
+        <Suspense fallback={null}>
+          <SearchKeywordHighlighter />
+        </Suspense>
         <div className="flex-1 w-full relative z-10 flex flex-col">
           {children}
         </div>
