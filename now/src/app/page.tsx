@@ -1,5 +1,10 @@
+import type { Metadata } from "next";
 import Hero from "./components/Hero";
 import HomeBackground from "./components/HomeBackground";
+
+export const metadata: Metadata = {
+  title: "Home",
+};
 
 export default function Home() {
   return (

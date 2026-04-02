@@ -89,6 +89,32 @@ body {
 	min-height: 100dvh;
 }
 
+/* Portfolio-wide scrollbar with emerald theme */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: #059669 #d1fae5;
+}
+
+*::-webkit-scrollbar {
+	width: 12px;
+	height: 12px;
+}
+
+*::-webkit-scrollbar-track {
+	background: #d1fae5;
+	border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb {
+	background: linear-gradient(180deg, #10b981 0%, #047857 100%);
+	border: 2px solid #d1fae5;
+	border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+	background: linear-gradient(180deg, #059669 0%, #065f46 100%);
+}
+
 @media (max-width: 767px) {
 	body {
 		min-height: max(884px, 100dvh);

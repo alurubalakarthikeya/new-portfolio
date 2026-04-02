@@ -1,4 +1,9 @@
+import type { Metadata } from "next";
 import ProjectGrid from "../components/ProjectGrid";
+
+export const metadata: Metadata = {
+    title: "Work",
+};
 
 export default function WorkPage() {
     return (

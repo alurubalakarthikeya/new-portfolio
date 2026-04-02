@@ -9,7 +9,7 @@ export default function Footer() {
           <p className="text-sm font-medium text-[#059669]">© 2026 All rights reserved.</p>
         </div>
 
-        <div className="flex flex-col gap-2 items-center md:items-end md:text-left">
+        <div className="hidden md:flex flex-col gap-2 items-center md:items-end md:text-left">
           <p className="font-bold text-lg text-[#022c22] mb-1">My Socials</p>
           <div className="flex gap-5 justify-center md:justify-end">
             <a
@@ -35,7 +35,9 @@ export default function Footer() {
             </a>
             <a
               className="text-[#064e3b]/70 hover:text-[#10b981] transition-colors"
-              href="#"
+              href="https://github.com/alurubalakarthikeya"
+              target="_blank"
+              rel="noreferrer"
               aria-label="GitHub"
             >
               <svg viewBox="0 0 24 24" className="w-6 h-6" fill="currentColor" aria-hidden="true">

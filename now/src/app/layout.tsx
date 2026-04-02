@@ -3,10 +3,19 @@ import "./globals.css";
 import Footer from "./components/Footer";
 import Cursor from "./components/Cursor";
 import MobileNav from "./components/MobileNav";
+import logo from "./assets/imgs/logo.png";
 
 export const metadata: Metadata = {
-  title: "Karthikeya | Home",
+  title: {
+    default: "Karthikeya | Home",
+    template: "Karthikeya | %s",
+  },
   description: "Portfolio of Bala Karthikeya, Full Stack & AI Developer",
+  icons: {
+    icon: logo.src,
+    shortcut: logo.src,
+    apple: logo.src,
+  },
 };
 
 export default function RootLayout({
