@@ -257,10 +257,10 @@ export default function ProjectGrid() {
   const selectedProject = activeProject ? popupProjects[activeProject] : null;
 
   return (
-    <section className="px-6 md:px-12 w-full max-w-7xl mx-auto">
+    <section id="projects" className="px-6 md:px-12 w-full max-w-7xl mx-auto scroll-mt-28">
       <div className="text-center mb-20">
-        <h2 className="text-5xl md:text-6xl font-extrabold font-headline text-[#064e3f] mb-6">
-          Projects Made.
+        <h2 className="text-4xl sm:text-5xl md:text-7xl font-extrabold font-headline font-doto text-[#064e3f] mb-6">
+          Projects Made<span className="font-doto text-4xl sm:text-5xl md:text-7xl font-extrabold rubber-spin-dot inline-flex items-center justify-center w-[1em] h-[1em] leading-none align-middle">+</span>
         </h2>
         <p className="text-xl text-[#064e3b]/80 font-medium">Clean interfaces meeting powerful logical backends.</p>
       </div>
@@ -268,11 +268,12 @@ export default function ProjectGrid() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-20">
         {/* Card 1 */}
         <motion.div
+          id="calgpa"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.6 }}
-          className="bg-white rounded-[3rem] p-10 md:p-12 transition-all duration-300 hover:-translate-y-2 group flex flex-col h-[550px] overflow-hidden relative shadow-[0_20px_60px_rgba(16,185,129,0.08)]"
+          className="bg-white rounded-[3rem] p-10 md:p-12 transition-all duration-300 hover:-translate-y-2 group flex flex-col h-[550px] overflow-hidden relative shadow-[0_20px_60px_rgba(16,185,129,0.08)] scroll-mt-28"
         >
             <BracketButton onClick={() => setActiveProject('calgpa')} label="Open CalGPA project details popup" />
           <div className="flex flex-col relative z-10 w-full mb-10 text-center items-center">
@@ -288,11 +289,12 @@ export default function ProjectGrid() {
 
         {/* Card 2 */}
         <motion.div
+          id="zephra"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="bg-white rounded-[3rem] p-10 md:p-12 transition-all duration-300 hover:-translate-y-2 group flex flex-col h-[550px] overflow-hidden relative shadow-[0_20px_60px_rgba(16,185,129,0.08)]"
+          className="bg-white rounded-[3rem] p-10 md:p-12 transition-all duration-300 hover:-translate-y-2 group flex flex-col h-[550px] overflow-hidden relative shadow-[0_20px_60px_rgba(16,185,129,0.08)] scroll-mt-28"
         >
             <BracketButton onClick={() => setActiveProject('zephra')} label="Open Zephra project details popup" />
           <div className="flex flex-col relative z-10 w-full mb-10 text-center items-center">
@@ -308,11 +310,12 @@ export default function ProjectGrid() {
 
       {/* Featured Big Card */}
       <motion.div
+        id="aether"
         initial={{ opacity: 0, scale: 0.98, y: 40 }}
         whileInView={{ opacity: 1, scale: 1, y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.6 }}
-        className="relative bg-[#10b981] rounded-[4rem] p-12 md:p-20 flex flex-col md:flex-row items-center gap-16 shadow-[0_20px_60px_rgba(16,185,129,0.2)] overflow-hidden"
+        className="relative bg-[#10b981] rounded-[4rem] p-12 md:p-20 flex flex-col md:flex-row items-center gap-16 shadow-[0_20px_60px_rgba(16,185,129,0.2)] overflow-hidden scroll-mt-28"
       >
         <BracketButton onClick={() => setActiveProject('aether')} label="Open Aether project details popup" inverse />
         <div className="md:w-1/2 relative z-10">
@@ -331,36 +334,37 @@ export default function ProjectGrid() {
       </motion.div>
 
       <div className="mt-10 mb-6 w-full">
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5">
         {[
           {
             key: 'miniminds' as const,
             name: 'Mini-Minds',
             short: 'Fun e-learning with levels and mini exercises.',
-            tone: 'bg-[#ecfdf5]',
+            badge: 'E-Learning Prototype',
           },
           {
             key: 'carsio' as const,
             name: 'Cars.IO',
             short: 'SQL retail DB for car sales and purchases.',
-            tone: 'bg-[#f0fdf4]',
+            badge: 'DBMS • SQL',
           },
           {
             key: 'roledoc' as const,
             name: 'RoleDoc',
             short: 'RAG chatbot that talks with your documents.',
-            tone: 'bg-[#ecfeff]',
+            badge: 'AI RAG Assistant',
           },
           {
             key: 'fastype' as const,
             name: 'FasType',
             short: 'React typing speed practice and WPM checks.',
-            tone: 'bg-[#f0fdfa]',
+            badge: 'Utility App',
           },
         ].map((item) => (
           <div
+            id={item.key}
             key={item.name}
-            className="relative aspect-square rounded-[2rem] border border-emerald-100/80 bg-white shadow-[0_16px_30px_rgba(16,185,129,0.1)] p-4"
+            className="relative bg-white rounded-[2.25rem] p-6 md:p-7 transition-all duration-300 hover:-translate-y-1.5 group flex flex-col min-h-[236px] shadow-[0_20px_60px_rgba(16,185,129,0.08)] scroll-mt-28"
           >
             <BracketButton
               onClick={() => setActiveProject(item.key)}
@@ -368,11 +372,12 @@ export default function ProjectGrid() {
               className="top-3 right-3 h-8 w-8 rounded-lg"
               iconClassName="text-[0.72rem]"
             />
-            <div className={`h-full w-full rounded-[1.35rem] ${item.tone} border border-emerald-100/70 p-3 flex flex-col justify-between`}>
-              <div className="h-2.5 w-10 rounded-full bg-emerald-300/70" />
-              <div>
-                <p className="text-[0.97rem] font-bold text-emerald-900/90 leading-tight">{item.name}</p>
-                <p className="mt-1 text-[0.78rem] leading-relaxed text-emerald-900/70">{item.short}</p>
+            <div className="flex flex-col relative z-10 w-full h-full text-left pr-9">
+              <p className="inline-flex w-fit text-[#10b981] font-bold text-[10px] tracking-[0.14em] uppercase bg-[#10b981]/10 px-3 py-1.5 rounded-full">{item.badge}</p>
+              <h4 className="mt-4 text-[1.45rem] font-extrabold font-headline text-[#064e3f] leading-tight">{item.name}</h4>
+              <p className="mt-2 text-[0.95rem] leading-relaxed text-[#064e3b]/80 font-medium">{item.short}</p>
+              <div className="mt-auto pt-5">
+                <div className="h-2 w-16 rounded-full bg-[#10b981]/30" />
               </div>
             </div>
           </div>

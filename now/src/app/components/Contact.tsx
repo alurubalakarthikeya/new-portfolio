@@ -1,5 +1,8 @@
 "use client";
 import { motion } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCode } from "@fortawesome/free-solid-svg-icons";
+import { faLinkedinIn, faGithub, faXTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons";
 
 export default function Contact() {
     return (
@@ -19,7 +22,7 @@ export default function Contact() {
                         <p className="inline-flex px-3.5 py-1.5 rounded-full text-[11px] tracking-[0.18em] uppercase font-bold bg-white/15 text-[#d1fae5] border border-white/20">
                             Contact / Open for Work
                         </p>
-                        <h2 className="mt-5 text-4xl md:text-[4.2rem] font-extrabold font-headline text-white leading-[0.95] tracking-tight">
+                        <h2 className="mt-5 text-4xl sm:text-5xl md:text-7xl font-extrabold font-headline font-doto text-white leading-[0.95] tracking-tight">
                             Let’s build
                             <br />
                             something meaningful.
@@ -56,7 +59,7 @@ export default function Contact() {
                                     rel="noreferrer"
                                     aria-label="LinkedIn"
                                 >
-                                    <span className="material-symbols-outlined text-[1.05rem]">work</span>
+                                                                        <FontAwesomeIcon icon={faLinkedinIn} className="w-4 h-4" aria-hidden="true" />
                                 </a>
                                 <a
                                     className="h-10 w-10 rounded-xl bg-white/20 border border-white/25 text-white flex items-center justify-center hover:bg-white/30 transition-colors"
@@ -65,16 +68,34 @@ export default function Contact() {
                                     rel="noreferrer"
                                     aria-label="GitHub"
                                 >
-                                    <span className="material-symbols-outlined text-[1.05rem]">code</span>
+                                                                        <FontAwesomeIcon icon={faGithub} className="w-4 h-4" aria-hidden="true" />
                                 </a>
                                 <a
                                     className="h-10 w-10 rounded-xl bg-white/20 border border-white/25 text-white flex items-center justify-center hover:bg-white/30 transition-colors"
-                                    href="https://x.com"
+                                    href="https://x.com/abalakarthikeya"
                                     target="_blank"
                                     rel="noreferrer"
                                     aria-label="X"
                                 >
-                                    <span className="material-symbols-outlined text-[1.05rem]">chat</span>
+                                                                        <FontAwesomeIcon icon={faXTwitter} className="w-4 h-4" aria-hidden="true" />
+                                </a>
+                                <a
+                                  className="h-10 w-10 rounded-xl bg-white/20 border border-white/25 text-white flex items-center justify-center hover:bg-white/30 transition-colors"
+                                  href="https://leetcode.com/your-username"
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  aria-label="LeetCode"
+                                >
+                                                                    <FontAwesomeIcon icon={faCode} className="w-4 h-4" aria-hidden="true" />
+                                                                </a>
+                                                                <a
+                                                                    className="h-10 w-10 rounded-xl bg-white/20 border border-white/25 text-white flex items-center justify-center hover:bg-white/30 transition-colors"
+                                                                    href="https://youtube.com/@your-channel"
+                                                                    target="_blank"
+                                                                    rel="noreferrer"
+                                                                    aria-label="YouTube"
+                                                                >
+                                                                    <FontAwesomeIcon icon={faYoutube} className="w-4 h-4" aria-hidden="true" />
                                 </a>
                             </div>
                         </div>
