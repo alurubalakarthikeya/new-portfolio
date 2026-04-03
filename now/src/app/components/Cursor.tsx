@@ -1,43 +1,66 @@
 "use client";
-import { useEffect, useState } from "react";
-import { motion, useSpring } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 
 export default function Cursor() {
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [isHovering, setIsHovering] = useState(false);
+    const hoverStateRef = useRef(false);
+    const rafRef = useRef<number | null>(null);
+    const latestPointerRef = useRef({ x: 0, y: 0, target: null as EventTarget | null });
 
-    const springX = useSpring(0, { stiffness: 500, damping: 28 });
-    const springY = useSpring(0, { stiffness: 500, damping: 28 });
+    const ringX = useMotionValue(-100);
+    const ringY = useMotionValue(-100);
+    const springX = useSpring(ringX, { stiffness: 500, damping: 28 });
+    const springY = useSpring(ringY, { stiffness: 500, damping: 28 });
+    const dotX = useMotionValue(-100);
+    const dotY = useMotionValue(-100);
 
     useEffect(() => {
-        // Determine initially hidden to avoid jumping from top-left
-        const updateMousePosition = (e: MouseEvent) => {
-            setMousePosition({ x: e.clientX, y: e.clientY });
-            springX.set(e.clientX - 16);
-            springY.set(e.clientY - 16);
+        const media = window.matchMedia("(min-width: 768px) and (pointer: fine)");
+        if (!media.matches) {
+            return;
+        }
 
-            const target = e.target as HTMLElement;
-            if (
-                target.tagName.toLowerCase() === 'a' ||
-                target.tagName.toLowerCase() === 'button' ||
-                target.closest('a') !== null ||
-                target.closest('button') !== null ||
-                target.closest('.group') !== null
-            ) {
-                setIsHovering(true);
-            } else {
-                setIsHovering(false);
+        const flushPointer = () => {
+            rafRef.current = null;
+            const { x, y, target } = latestPointerRef.current;
+
+            ringX.set(x - 16);
+            ringY.set(y - 16);
+            dotX.set(x - 4);
+            dotY.set(y - 4);
+
+            const element = target as HTMLElement | null;
+            const nextHoverState = !!element && (
+                element.tagName.toLowerCase() === "a" ||
+                element.tagName.toLowerCase() === "button" ||
+                element.closest("a") !== null ||
+                element.closest("button") !== null ||
+                element.closest(".group") !== null
+            );
+
+            // Avoid redundant React state writes while moving the mouse.
+            if (hoverStateRef.current !== nextHoverState) {
+                hoverStateRef.current = nextHoverState;
+                setIsHovering(nextHoverState);
             }
         };
 
-        window.addEventListener("mousemove", updateMousePosition);
-        return () => window.removeEventListener("mousemove", updateMousePosition);
-    }, [springX, springY]);
+        const updateMousePosition = (e: MouseEvent) => {
+            latestPointerRef.current = { x: e.clientX, y: e.clientY, target: e.target };
+            if (rafRef.current === null) {
+                rafRef.current = window.requestAnimationFrame(flushPointer);
+            }
+        };
 
-    // Don't render until we have mounted to avoid hydration errors
-    const [mounted, setMounted] = useState(false);
-    useEffect(() => setMounted(true), []);
-    if (!mounted) return null;
+        window.addEventListener("mousemove", updateMousePosition, { passive: true });
+        return () => {
+            window.removeEventListener("mousemove", updateMousePosition);
+            if (rafRef.current !== null) {
+                window.cancelAnimationFrame(rafRef.current);
+            }
+        };
+    }, [dotX, dotY, ringX, ringY]);
 
     return (
         <>
@@ -52,11 +75,10 @@ export default function Cursor() {
             <motion.div
                 className="fixed top-0 left-0 w-2 h-2 rounded-full bg-[#059669] pointer-events-none z-[9999] hidden md:block mix-blend-multiply"
                 animate={{
-                    x: mousePosition.x - 4,
-                    y: mousePosition.y - 4,
                     scale: isHovering ? 6 : 1,
                     backgroundColor: isHovering ? "rgba(16, 185, 129, 0.2)" : "rgba(5, 150, 105, 1)",
                 }}
+                style={{ x: dotX, y: dotY }}
                 transition={{ type: "tween", ease: "backOut", duration: 0.15 }}
             />
         </>

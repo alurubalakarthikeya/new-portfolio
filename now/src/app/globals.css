@@ -117,6 +117,9 @@ body {
 	font-family: 'Plus Jakarta Sans', sans-serif;
 	overflow-x: hidden;
 	min-height: 100dvh;
+	user-select: none;
+	-webkit-user-select: none;
+	-webkit-touch-callout: none;
 }
 
 /* Portfolio-wide scrollbar with emerald theme */
@@ -181,6 +184,8 @@ body {
 	z-index: 0;
 	pointer-events: none;
 	overflow: hidden;
+	contain: layout paint;
+	transform: translateZ(0);
 	background: radial-gradient(circle at 18% 22%, rgba(16, 185, 129, 0.28) 0%, rgba(16, 185, 129, 0) 42%),
 		radial-gradient(circle at 84% 74%, rgba(16, 185, 129, 0.24) 0%, rgba(16, 185, 129, 0) 44%);
 	mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.98) 38%, rgba(0, 0, 0, 0.68) 76%, rgba(0, 0, 0, 0.18) 100%);
@@ -191,23 +196,24 @@ body {
 	width: 84vmax;
 	height: 84vmax;
 	border-radius: 46% 54% 41% 59% / 58% 43% 57% 42%;
-	filter: blur(54px);
+	filter: blur(44px);
 	opacity: 0.9;
 	will-change: transform;
+	transform: translateZ(0);
 }
 
 .home-gradient-wave-a {
 	top: -40vmax;
 	left: -26vmax;
 	background: radial-gradient(circle at 34% 30%, rgba(16, 185, 129, 0.66) 0%, rgba(16, 185, 129, 0.32) 36%, rgba(16, 185, 129, 0) 68%);
-	animation: wave-drift-a 3.2s cubic-bezier(0.32, 0.02, 0.18, 0.98) infinite;
+	animation: wave-drift-a 8.5s cubic-bezier(0.32, 0.02, 0.18, 0.98) infinite;
 }
 
 .home-gradient-wave-b {
 	top: -36vmax;
 	right: -22vmax;
 	background: radial-gradient(circle at 52% 35%, rgba(16, 185, 129, 0.64) 0%, rgba(16, 185, 129, 0.28) 38%, rgba(16, 185, 129, 0) 71%);
-	animation: wave-drift-b 3.7s cubic-bezier(0.34, 0.02, 0.2, 0.98) infinite;
+	animation: wave-drift-b 9.8s cubic-bezier(0.34, 0.02, 0.2, 0.98) infinite;
 }
 
 .home-gradient-wave-c {
@@ -215,7 +221,7 @@ body {
 	left: 50%;
 	transform: translateX(-50%);
 	background: radial-gradient(circle at 48% 50%, rgba(16, 185, 129, 0.56) 0%, rgba(16, 185, 129, 0.24) 39%, rgba(16, 185, 129, 0) 72%);
-	animation: wave-drift-c 4.1s cubic-bezier(0.3, 0.02, 0.2, 0.98) infinite;
+	animation: wave-drift-c 10.6s cubic-bezier(0.3, 0.02, 0.2, 0.98) infinite;
 }
 
 .home-gradient-field::before {
@@ -223,9 +229,10 @@ body {
 	position: absolute;
 	inset: -32%;
 	background: conic-gradient(from 45deg, rgba(16, 185, 129, 0.22), rgba(16, 185, 129, 0.14), rgba(16, 185, 129, 0.22), rgba(16, 185, 129, 0.22));
-	filter: blur(64px);
+	filter: blur(52px);
 	opacity: 0.88;
-	animation: gradient-sweep 3.6s linear infinite;
+	animation: gradient-sweep 11s linear infinite;
+	will-change: transform;
 }
 
 .home-gradient-glow {
@@ -233,7 +240,7 @@ body {
 	border-radius: 999px;
 	filter: blur(30px);
 	mix-blend-mode: screen;
-	animation: glow-pulse 3s ease-in-out infinite;
+	animation: glow-pulse 6s ease-in-out infinite;
 }
 
 .home-gradient-glow-a {
@@ -265,6 +272,15 @@ body {
 	background: rgba(16, 185, 129, 0.26);
 	border-radius: 0.18rem;
 	padding: 0 0.08rem;
+}
+
+.no-scrollbar {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+	display: none;
 }
 
 .home-gradient-vignette {

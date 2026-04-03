@@ -18,7 +18,7 @@ export default function MobileNav() {
         {links.map((l) => {
           const isActive = pathname === l.href || (pathname.startsWith(l.href) && l.href !== '/');
           return (
-            <Link key={l.href} href={l.href} scroll={false}
+            <Link key={l.href} href={l.href}
               className={`px-[14px] py-[6px] rounded-full flex items-center justify-center transition-all duration-300 ${isActive
                 ? 'bg-[#10b981] text-white shadow-md hover:scale-105'
                 : 'text-[#064e3b]/80 hover:bg-white/50 hover:scale-105 hover:text-[#059669]'

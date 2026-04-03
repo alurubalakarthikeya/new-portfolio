@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import mePhoto from "../assets/imgs/me.png";
 
@@ -52,10 +52,10 @@ const loopTitles = [
 ];
 
 const focusAreas = [
-    { label: "DevOps & Delivery", level: 92 },
-    { label: "UI/UX Craft", level: 90 },
-    { label: "Full Stack Development", level: 91 },
-    { label: "ServiceNow Workflows", level: 86 },
+    { label: "DevOps & Delivery", level: 90 },
+    { label: "UI/UX Design", level: 92 },
+    { label: "Full Stack Development", level: 79 },
+    { label: "ServiceNow Workflows", level: 82 },
 ];
 
 const education = [
@@ -76,14 +76,22 @@ const education = [
     },
 ];
 
+const quickStats = [
+    { label: "Github Repositories", value: "17" },
+    { label: "Deployed Repositories", value: "8" },
+    { label: "Github Contributions", value: "1800+" },
+    { label: "GitHub Stars", value: "464" },
+];
+
+const githubUsername = "alurubalakarthikeya";
+
 
 export default function About() {
+    const reduceMotion = useReducedMotion();
+
     return (
-        <section id="about" className="relative px-6 md:px-12 w-full max-w-7xl mx-auto pb-10">
-            <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[34rem]">
-                <div className="absolute top-6 -left-6 w-72 h-72 rounded-full bg-[#10b981]/20 blur-3xl" />
-                <div className="absolute top-10 right-8 w-80 h-80 rounded-full bg-[#047857]/20 blur-3xl" />
-            </div>
+        <section id="about" className="relative w-full min-h-screen pb-10 overflow-hidden">
+            <div className="relative px-6 md:px-12 w-full max-w-7xl mx-auto">
 
             <motion.div
                 initial={{ opacity: 0, y: 22 }}
@@ -96,7 +104,7 @@ export default function About() {
                     About / Design + Dev + Me
                 </p>
                 <h2 className="mt-5 text-4xl sm:text-5xl md:text-7xl font-extrabold font-headline font-doto text-[#022c22] tracking-tight leading-[0.95]">
-                    Building Apps,
+                    Building Apps, <br />
                     With Passion<span className="font-doto text-4xl sm:text-5xl md:text-7xl font-extrabold rubber-spin-dot inline-flex items-center justify-center w-[1em] h-[1em] leading-none align-middle">+</span>
                 </h2>
                 <p className="mt-6 text-lg md:text-xl text-[#064e3b]/80 font-medium max-w-3xl mx-auto">
@@ -104,11 +112,115 @@ export default function About() {
                 </p>
             </motion.div>
 
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 mb-10">
+                <motion.article
+                    initial={{ opacity: 0, x: -26 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.55 }}
+                    className="lg:col-span-7 rounded-[2.6rem] border border-emerald-200/55 bg-white/55 backdrop-blur-xl p-7 md:p-9 shadow-[0_20px_56px_rgba(16,185,129,0.1)]"
+                >
+                    <p className="inline-flex px-4 py-1.5 rounded-full text-[11px] tracking-[0.16em] uppercase font-bold text-[#047857] bg-[#10b981]/12 border border-[#10b981]/25">
+                        Product Stats
+                    </p>
+                    <h3 className="mt-5 text-3xl md:text-5xl font-extrabold font-headline text-[#022c22] leading-[1.04]">
+                        Apps with clean UI,
+                        and real Use.
+                    </h3>
+                    <p className="mt-4 text-base md:text-lg text-[#064e3b]/85 max-w-2xl leading-relaxed font-medium">
+                       I always enjoy making my custom UI models by playing around rather than a static plan which makes them much better and unique.
+                    </p>
+
+                    <div className="mt-7 grid grid-cols-2 gap-3 md:gap-4">
+                        {quickStats.map((item) => (
+                            <div key={item.label} className="rounded-2xl border border-emerald-100 bg-[#ecfdf5] px-4 py-4 shadow-sm">
+                                <p className="text-[11px] tracking-[0.14em] uppercase text-[#047857] font-bold">{item.label}</p>
+                                <p className="mt-1 text-xl md:text-2xl font-black text-[#022c22]">{item.value}</p>
+                            </div>
+                        ))}
+                    </div>
+                </motion.article>
+
+                <motion.aside
+                    initial={{ opacity: 0, x: 26 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.55, delay: 0.08 }}
+                    className="lg:col-span-5 rounded-[2.6rem] border border-emerald-300/30 bg-gradient-to-br from-[#10b981] to-[#047857] p-7 md:p-9 shadow-[0_24px_64px_rgba(6,95,70,0.28)] text-white relative overflow-hidden"
+                >
+                    <div className="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-white/14 blur-2xl" />
+                    <div className="relative z-10 flex items-start gap-4">
+                        <div className="relative w-20 h-20 rounded-2xl border border-white/50 overflow-hidden shadow-[0_14px_24px_rgba(0,0,0,0.2)] shrink-0">
+                            <Image
+                                src={mePhoto}
+                                alt="Karthikeya profile"
+                                fill
+                                className="object-cover"
+                                sizes="80px"
+                                priority
+                            />
+                        </div>
+                        <div>
+                            <p className="text-sm tracking-[0.14em] uppercase text-[#d1fae5] font-bold">Hello there, I'm</p>
+                            <h4 className="text-2xl font-black leading-tight mt-1">Aluru Bala Karthikeya</h4>
+                            <p className="text-sm tracking-[0.14em] uppercase text-[#d1fae5] mt-1 font-bold">24K @LinkedIn</p>
+                        </div>
+                    </div>
+                    <p className="relative z-10 mt-6 text-[#ecfdf5] text-base leading-relaxed font-medium">
+                       A Pre-final year Computer Science student at Dayananda Sagar University who enjoys turning ideas into real world working products. I like to build applications that solves meaningful problems while exploring the domains of software engineering, AI systems, and product design. My approach of building products is simple: solve real problems, design unique UI experiences, and build scalable systems.
+                    </p>
+                    <div className="relative z-10 mt-6 flex flex-wrap gap-2.5">
+                        {[
+                            "DevOps",
+                            "ServiceNow",
+                            "AI Workflows",
+                            "Frontend Systems",
+                            "Product Thinking",
+                        ].map((chip) => (
+                            <span key={chip} className="rounded-full px-3 py-1.5 text-xs font-bold tracking-[0.1em] uppercase border border-white/40 bg-white/15 text-white">
+                                {chip}
+                            </span>
+                        ))}
+                    </div>
+                </motion.aside>
+            </div>
+
+            <motion.section
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45 }}
+                className="mb-10 rounded-[2.4rem] border border-emerald-100/75 bg-white/68 backdrop-blur-md p-5 md:p-7 shadow-[0_18px_45px_rgba(16,185,129,0.08)]"
+            >
+                <div className="flex flex-row items-center justify-between gap-3 mb-4">
+                    <div>
+                        <p className="text-[11px] tracking-[0.16em] uppercase font-bold text-[#047857]">GitHub graph</p>
+                    </div>
+                    <a
+                        href={`https://github.com/${githubUsername}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex w-fit px-3 py-1.5 rounded-full text-xs font-bold tracking-[0.1em] uppercase bg-[#10b981]/12 text-[#047857] border border-[#10b981]/20"
+                    >
+                        @{githubUsername}
+                    </a>
+                </div>
+
+                <div className="w-full">
+                    <img
+                        src={`https://ghchart.rshah.org/10b981/${githubUsername}`}
+                        alt={`${githubUsername} GitHub contributions graph`}
+                        className="w-full h-auto rounded-2xl border border-emerald-100/80 bg-[#ecfdf5] p-2"
+                        loading="lazy"
+                    />
+                </div>
+            </motion.section>
+
             <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen overflow-hidden rounded-none border-y border-[#86efac]/45 bg-[#d1fae5]/35 backdrop-blur-2xl shadow-[0_12px_32px_rgba(5,150,105,0.16)] mb-10">
                 <motion.div
                     className="flex gap-4 w-max py-4 px-6 md:px-12"
-                    animate={{ x: [0, -860] }}
-                    transition={{ duration: 22, ease: "linear", repeat: Infinity }}
+                    animate={reduceMotion ? undefined : { x: [0, -860] }}
+                    transition={reduceMotion ? undefined : { duration: 22, ease: "linear", repeat: Infinity }}
                 >
                     {[...loopTitles, ...loopTitles, ...loopTitles].map((title, index) => (
                         <span
@@ -127,38 +239,37 @@ export default function About() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.55 }}
-                    className="lg:col-span-7 relative rounded-[2.3rem] bg-white border border-emerald-100/80 p-7 md:p-9 shadow-[0_24px_60px_rgba(16,185,129,0.08)] overflow-hidden"
+                    className="lg:col-span-7 relative rounded-[2.3rem] bg-white/70 border border-emerald-100/70 p-7 md:p-9 shadow-[0_20px_50px_rgba(16,185,129,0.08)] overflow-hidden backdrop-blur-md"
                 >
                     <div className="absolute -top-20 -right-20 w-52 h-52 rounded-full bg-[#10b981]/15 blur-3xl" />
-                    <div className="mb-6 flex items-center gap-4 rounded-2xl border border-emerald-600/20 bg-[#10b981]/12  p-3 shadow-sm">
-  
-  <div className="relative w-16 h-16 rounded-full border-2 border-emerald-500/40 overflow-hidden shadow-[0_10px_24px_rgba(0,0,0,0.08)]">
-    <Image
-      src={mePhoto}
-      alt="Karthikeya profile"
-      fill
-      className="object-cover"
-      sizes="64px"
-      priority
-    />
-  </div>
 
-  <div>
-        <p className="text-gray-900 font-bold text-lg leading-tight">
-      Aluru Bala Karthikeya
-    </p>
-    <p className="text-[12px] tracking-[0.13em] uppercase font-bold text-emerald-600">
-      24k @LinkedIn
-    </p>
-  </div>
-
-</div>
                     <h3 className="text-3xl md:text-4xl font-extrabold font-headline text-[#022c22] leading-tight mb-4">About Me</h3>
                     <p className="text-lg text-[#064e3b]/85 leading-relaxed font-medium">
-                        I focus on delivering robust systems across DevOps pipelines, full stack architecture, and clean interface design that users genuinely enjoy.
+                        Beyond development, I also help professionals improve their LinkedIn presence and personal branding by helping them optimize their profiles for better visibility and opportunities.
                     </p>
-                    <p className="mt-4 text-lg text-[#064e3b]/80 leading-relaxed font-medium">
-                        ServiceNow, AI workflows, and modern frontend patterns come together in my workflow to build products that are both scalable and human.
+                    <h4 className="text-1xl md:text-2xl font-extrabold font-headline text-[#022c22] leading-tight mt-4">Hobbies</h4>
+                    <div className="relative z-10 mt-6 flex flex-wrap gap-2.5">
+                        {[
+                            "Drawing",
+                            "Reading News",
+                            "Learning New Things",
+                            "Music",
+                            "Wikipedia",
+                            "History", 
+                            "Art",
+                            "Psychology"
+                        ].map((chip) => (
+                            <span key={chip} className="rounded-full px-3 py-1.5 text-xs font-bold tracking-[0.1em] uppercase border border-green/40 bg-green/15 text-green">
+                                {chip}
+                            </span>
+                        ))}
+                    </div>
+                    <h4 className="text-1xl md:text-2xl font-extrabold font-headline text-[#022c22] leading-tight mt-6">Languages I Speak:</h4>
+                    <p className="text-lg text-[#064e3b]/85 leading-relaxed font-medium mt-4">
+                     - English (Professional proficiency) <br />
+                     - Hindi (Professional proficiency) <br />
+                     - Telugu (Native / Professional proficiency) <br />
+                     - Kannada (Basic proficiency)
                     </p>
                 </motion.article>
 
@@ -167,7 +278,7 @@ export default function About() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.55, delay: 0.08 }}
-                    className="lg:col-span-5 rounded-[2.3rem] bg-[#022c22] text-white border border-emerald-400/20 p-7 md:p-9 shadow-[0_24px_60px_rgba(2,44,34,0.24)]"
+                    className="lg:col-span-5 rounded-[2.3rem] bg-[#022c22]/95 text-white border border-emerald-400/20 p-7 md:p-9 shadow-[0_22px_54px_rgba(2,44,34,0.24)]"
                 >
                     <h3 className="text-3xl font-extrabold font-headline mb-6">Skills</h3>
                     <div className="space-y-4 mb-7">
@@ -205,11 +316,12 @@ export default function About() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5 }}
-                    className="lg:col-span-4 rounded-[2.3rem] border border-emerald-100 bg-white/80 backdrop-blur-md p-7 md:p-9 shadow-[0_18px_45px_rgba(16,185,129,0.08)]"
+                    className="lg:col-span-4 rounded-[2.3rem] border border-emerald-100/75 bg-white/72 backdrop-blur-md p-7 md:p-9 shadow-[0_16px_40px_rgba(16,185,129,0.08)]"
                 >
                     <h3 className="text-2xl md:text-3xl font-extrabold font-headline text-[#022c22]">Currently Working</h3>
                     <p className="mt-3 text-lg text-[#064e3b]/80 font-medium leading-relaxed">
-                        Designing agentic systems that feel less like tools and more like collaborators, while keeping UI language bold, calm, and unmistakably human.
+                      • ServiceNow platform for application development, <br />• Automation of workflows, <br />• AI Systems and Intelligent Agents
+<br />• UI/UX and Product Design
                     </p>
                 </motion.div>
 
@@ -218,7 +330,7 @@ export default function About() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.08 }}
-                    className="lg:col-span-8 rounded-[2.3rem] bg-white border border-emerald-100/80 p-7 md:p-9 shadow-[0_20px_55px_rgba(16,185,129,0.08)]"
+                    className="lg:col-span-8 rounded-[2.3rem] bg-white/72 border border-emerald-100/75 p-7 md:p-9 shadow-[0_18px_48px_rgba(16,185,129,0.08)] backdrop-blur-md"
                 >
                     <h3 className="text-3xl md:text-4xl font-extrabold font-headline text-[#022c22] mb-6">Education</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -240,7 +352,7 @@ export default function About() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5 }}
-                    className="lg:col-span-8 rounded-[2.3rem] bg-white border border-emerald-100/80 p-7 md:p-9 shadow-[0_20px_55px_rgba(16,185,129,0.08)]"
+                    className="lg:col-span-8 rounded-[2.3rem] bg-white/72 border border-emerald-100/75 p-7 md:p-9 shadow-[0_18px_48px_rgba(16,185,129,0.08)] backdrop-blur-md"
                 >
                     <h3 className="text-3xl md:text-4xl font-extrabold font-headline text-[#022c22] mb-7">Experiences</h3>
                     <div className="space-y-5">
@@ -273,6 +385,7 @@ export default function About() {
                         ))}
                     </div>
                 </motion.article>
+            </div>
             </div>
 
         </section>

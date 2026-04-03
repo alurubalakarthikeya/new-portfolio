@@ -64,15 +64,6 @@ export default function Home() {
               </a>
               <a
                 className="text-[#064e3b]/70 hover:text-[#10b981] transition-colors"
-                href="https://leetcode.com/your-username"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="LeetCode"
-              >
-                <FontAwesomeIcon icon={faCode} className="w-5 h-5" aria-hidden="true" />
-              </a>
-              <a
-                className="text-[#064e3b]/70 hover:text-[#10b981] transition-colors"
                 href="https://youtube.com/@your-channel"
                 target="_blank"
                 rel="noreferrer"

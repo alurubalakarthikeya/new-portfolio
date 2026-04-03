@@ -1,10 +1,14 @@
 "use client";
 import { useEffect, useState } from 'react';
 import Image, { type StaticImageData } from 'next/image';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import aetherShot from '../assets/imgs/aether.jpeg';
 import calgpaShot from '../assets/imgs/calgpa.jpeg';
 import zephraShot from '../assets/imgs/zephra.jpeg';
+import minimindsShot from '../assets/imgs/miniminds.jpeg';
+import carsioShot from '../assets/imgs/cario.jpeg';
+import roledocShot from '../assets/imgs/roledoc.jpeg';
+import textotestShot from '../assets/imgs/textotest.jpeg';
 
 type PhoneMockupProps = {
   screenshotSrc?: string | StaticImageData;
@@ -15,7 +19,7 @@ type PhoneMockupProps = {
   topGapPx?: number;
 };
 
-type ProjectKey = 'calgpa' | 'zephra' | 'aether' | 'miniminds' | 'carsio' | 'roledoc' | 'fastype';
+type ProjectKey = 'calgpa' | 'zephra' | 'aether' | 'miniminds' | 'carsio' | 'roledoc' | 'textotest';
 
 type BracketButtonProps = {
   onClick: () => void;
@@ -27,11 +31,11 @@ type BracketButtonProps = {
 
 type PopupProject = {
   name: string;
-  badge: string;
-  summary: string;
-  highlights: string[];
+  description: string;
+  workedOn: string;
+  domain: string;
+  role: string;
   stack: string[];
-  stats: Array<{ label: string; value: string }>;
   repoUrl: string;
   liveUrl: string;
 };
@@ -95,6 +99,8 @@ function PhoneMockup({ screenshotSrc, alt, accentClassName, topVisibleImageOnly 
 
 export default function ProjectGrid() {
   const [activeProject, setActiveProject] = useState<ProjectKey | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     if (!activeProject) {
@@ -116,141 +122,98 @@ export default function ProjectGrid() {
     };
   }, [activeProject]);
 
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 767px)");
+    const syncMobile = () => setIsMobile(media.matches);
+    syncMobile();
+
+    media.addEventListener("change", syncMobile);
+    return () => media.removeEventListener("change", syncMobile);
+  }, []);
+
   const screenshots = {
     calgpa: calgpaShot,
     zephra: zephraShot,
     aether: aetherShot,
+    miniminds: minimindsShot,
+    carsio: carsioShot,
+    roledoc: roledocShot,
+    textotest: textotestShot,
   };
 
   const popupProjects: Record<ProjectKey, PopupProject> = {
     calgpa: {
       name: 'CalGPA',
-      badge: 'Academic Tool • PWA',
-      summary:
+      description:
         'CalGPA gives students a fast performance cockpit to track coursework, simulate grade outcomes, and plan future semesters with confidence.',
-      highlights: [
-        'Real-time GPA projection engine for What-If scenarios.',
-        'Course-wise impact cards for smarter prioritization.',
-        'Mobile-first layout focused on fast daily check-ins.',
-      ],
+      workedOn: '2025',
+      domain: 'EdTech Productivity',
+      role: 'Full Stack Developer',
       stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'PWA'],
-      stats: [
-        { label: 'Core Modules', value: '7' },
-        { label: 'Primary Views', value: '12' },
-        { label: 'Target Platform', value: 'Mobile' },
-      ],
-        repoUrl: 'https://github.com/your-username/calgpa',
-        liveUrl: 'https://your-calgpa-app-url.com',
+      repoUrl: 'https://github.com/your-username/calgpa',
+      liveUrl: 'https://your-calgpa-app-url.com',
     },
     zephra: {
       name: 'Zephra',
-      badge: 'Climate Tracking • PWA',
-      summary:
+      description:
         'Zephra blends satellite and ground sensing into clear, actionable air-quality intelligence with an interface designed for quick comprehension.',
-      highlights: [
-        'Forecast overlays that unify live station and satellite feeds.',
-        'Readable AQ indicators with trend confidence signals.',
-        'Clean geographic exploration optimized for motion and clarity.',
-      ],
+      workedOn: '2025',
+      domain: 'Climate Intelligence',
+      role: 'Frontend + Data UX Developer',
       stack: ['Next.js', 'TypeScript', 'Framer Motion', 'Visualization APIs'],
-      stats: [
-        { label: 'Data Sources', value: '2+' },
-        { label: 'Update Cycle', value: 'Near-Real-Time' },
-        { label: 'Primary Focus', value: 'Air Quality' },
-      ],
-        repoUrl: 'https://github.com/your-username/zephra',
-        liveUrl: 'https://your-zephra-app-url.com',
+      repoUrl: 'https://github.com/your-username/zephra',
+      liveUrl: 'https://your-zephra-app-url.com',
     },
-      aether: {
-        name: 'Aether',
-        badge: 'AI Companion • Habit System',
-        summary:
-          'Aether combines journaling, habits, and emotional analytics into a single adaptive loop with AI-assisted behavior support.',
-        highlights: [
-          'Habit and mood feedback loop that adapts over time.',
-          'Conversational AI assistance for reflection and planning.',
-          'Unified dashboard for routines, emotion signals, and progress.',
-        ],
-        stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'AI Workflows'],
-        stats: [
-          { label: 'Core Flows', value: '3' },
-          { label: 'Primary Mode', value: 'Companion UX' },
-          { label: 'Platform', value: 'Web App' },
-        ],
-        repoUrl: 'https://github.com/your-username/aether',
-        liveUrl: 'https://your-aether-app-url.com',
-      },
+    aether: {
+      name: 'Aether',
+      description:
+        'Aether combines journaling, habits, and emotional analytics into a single adaptive loop with AI-assisted behavior support.',
+      workedOn: '2026',
+      domain: 'AI Companion / Wellness',
+      role: 'Product Engineer',
+      stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'AI Workflows'],
+      repoUrl: 'https://github.com/your-username/aether',
+      liveUrl: 'https://your-aether-app-url.com',
+    },
     miniminds: {
       name: 'Mini-Minds',
-      badge: 'E-Learning Prototype',
-      summary: 'A playful learning platform concept for children with mini exercises, levels, and progress rewards.',
-      highlights: [
-        'Kid-friendly learning flow with game-like progression.',
-        'Short challenge cards with level-up style feedback.',
-        'Built to keep focus high and learning stress low.',
-      ],
+      description: 'A playful learning platform concept for children with mini exercises, levels, and progress rewards.',
+      workedOn: '2024',
+      domain: 'Kids E-Learning',
+      role: 'Frontend Developer',
       stack: ['React', 'TypeScript', 'Tailwind CSS'],
-      stats: [
-        { label: 'Mode', value: 'Prototype' },
-        { label: 'Audience', value: 'Kids' },
-        { label: 'Focus', value: 'Gamified Learning' },
-      ],
       repoUrl: 'https://github.com/your-username/miniminds',
       liveUrl: 'https://your-miniminds-app-url.com',
     },
     carsio: {
       name: 'Cars.IO',
-      badge: 'DBMS • SQL Project',
-      summary: 'A SQL-based retail database system that tracks car inventory, purchases, and sales records.',
-      highlights: [
-        'Structured schema for car inventory and transactions.',
-        'Query-driven reporting for seller-side tracking.',
-        'Designed around clean relational data flow.',
-      ],
+      description: 'A SQL-based retail database system that tracks car inventory, purchases, and sales records.',
+      workedOn: '2024',
+      domain: 'Retail Data Systems',
+      role: 'Database Developer',
       stack: ['SQL', 'Database Design', 'DBMS'],
-      stats: [
-        { label: 'Project Type', value: 'Academic' },
-        { label: 'Core Tech', value: 'SQL' },
-        { label: 'Domain', value: 'Automotive Retail' },
-      ],
       repoUrl: 'https://github.com/your-username/cars-io',
       liveUrl: 'https://your-cars-io-demo-url.com',
     },
     roledoc: {
       name: 'RoleDoc',
-      badge: 'RAG AI Chatbot',
-      summary: 'A document-chat assistant that reads uploaded files and responds with role-aware, context-smart answers.',
-      highlights: [
-        'Document upload with instant Q&A workflow.',
-        'RAG pipeline for context-grounded responses.',
-        'Roleplay-oriented answer style control.',
-      ],
+      description: 'A document-chat assistant that reads uploaded files and responds with role-aware, context-smart answers.',
+      workedOn: '2025',
+      domain: 'AI Knowledge Assistant',
+      role: 'AI Engineer',
       stack: ['RAG', 'LLM APIs', 'Next.js'],
-      stats: [
-        { label: 'AI Pattern', value: 'RAG' },
-        { label: 'Input', value: 'Docs' },
-        { label: 'Output', value: 'Real-Time Chat' },
-      ],
       repoUrl: 'https://github.com/your-username/roledoc',
       liveUrl: 'https://your-roledoc-app-url.com',
     },
-    fastype: {
-      name: 'FasType',
-      badge: 'Typing Practice App',
-      summary: 'A lightweight React typing trainer for speed practice and quick WPM checks.',
-      highlights: [
-        'Simple typing sessions with instant speed feedback.',
-        'Focused UI for daily practice loops.',
-        'Fast load, minimal setup, easy replay.',
-      ],
-      stack: ['React', 'JavaScript', 'CSS'],
-      stats: [
-        { label: 'Type', value: 'Practice Tool' },
-        { label: 'Core Metric', value: 'WPM' },
-        { label: 'Experience', value: 'Minimal' },
-      ],
-      repoUrl: 'https://github.com/your-username/fastype',
-      liveUrl: 'https://your-fastype-app-url.com',
+    textotest: {
+      name: 'TexToTest',
+      description: 'An AI-powered question generator that creates context-aware MCQs from source content for faster practice workflows.',
+      workedOn: '2026',
+      domain: 'AI Assessment',
+      role: 'AI Product Developer',
+      stack: ['Next.js', 'TypeScript', 'LLM APIs', 'Prompt Engineering'],
+      repoUrl: 'https://github.com/your-username/textotest',
+      liveUrl: 'https://your-textotest-app-url.com',
     },
   };
 
@@ -269,10 +232,10 @@ export default function ProjectGrid() {
         {/* Card 1 */}
         <motion.div
           id="calgpa"
-          initial={{ opacity: 0, y: 50 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 34 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.42 }}
           className="bg-white rounded-[3rem] p-10 md:p-12 transition-all duration-300 hover:-translate-y-2 group flex flex-col h-[550px] overflow-hidden relative shadow-[0_20px_60px_rgba(16,185,129,0.08)] scroll-mt-28"
         >
             <BracketButton onClick={() => setActiveProject('calgpa')} label="Open CalGPA project details popup" />
@@ -282,7 +245,7 @@ export default function ProjectGrid() {
             <p className="text-[#10b981] text-xl font-medium mb-12 max-w-md leading-relaxed">CalGPA is a web app designed to help uni students analyze and check their semester performance</p>
 
           </div>
-          <div className="mt-auto relative overflow-hidden aspect-[9/42] w-[90%] md:w-[84%] max-w-none md:max-w-[370px] mx-auto -mb-[30%] rounded-[2.5rem] border-[10px] border-white shadow-[0_16px_28px_rgba(6,78,59,0.25)] transition-transform duration-500 md:group-hover:-translate-y-4 bg-[#0f172a]/20">
+          <div className="mt-auto relative overflow-hidden aspect-[9/42] w-[90%] md:w-[84%] max-w-none md:max-w-[370px] mx-auto -mb-[30%] rounded-[2.5rem] border-[10px] border-white shadow-[0_34px_52px_rgba(6,78,59,0.32)] transition-transform duration-500 md:group-hover:-translate-y-4 bg-[#0f172a]/20">
             <PhoneMockup screenshotSrc={screenshots.calgpa || undefined} alt="CalGPA mobile preview" accentClassName="bg-gradient-to-b from-[#34d399] to-[#059669]" topVisibleImageOnly />
           </div>
         </motion.div>
@@ -290,10 +253,10 @@ export default function ProjectGrid() {
         {/* Card 2 */}
         <motion.div
           id="zephra"
-          initial={{ opacity: 0, y: 50 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 34 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.6, delay: 0.1 }}
+          transition={{ duration: 0.42, delay: 0.07 }}
           className="bg-white rounded-[3rem] p-10 md:p-12 transition-all duration-300 hover:-translate-y-2 group flex flex-col h-[550px] overflow-hidden relative shadow-[0_20px_60px_rgba(16,185,129,0.08)] scroll-mt-28"
         >
             <BracketButton onClick={() => setActiveProject('zephra')} label="Open Zephra project details popup" />
@@ -302,7 +265,7 @@ export default function ProjectGrid() {
             <p className="text-[#059669] font-bold text-sm tracking-widest uppercase bg-[#059669]/10 px-4 py-1.5 rounded-full mb-4">Climate Tracking • PWA</p>
             <p className="text-[#10b981] text-xl font-medium mb-12 max-w-md leading-relaxed">A web app that merges NASA TEMPO satellite data with ground-based monitoring to provide real-time air quality forecasts.</p>
           </div>
-          <div className="mt-auto relative overflow-hidden aspect-[9/42] w-[90%] md:w-[84%] max-w-none md:max-w-[370px] mx-auto -mb-[30%] rounded-[2.5rem] border-[10px] border-white shadow-[0_16px_28px_rgba(6,78,59,0.25)] transition-transform duration-500 md:group-hover:-translate-y-4 bg-[#0f172a]/20">
+          <div className="mt-auto relative overflow-hidden aspect-[9/42] w-[90%] md:w-[84%] max-w-none md:max-w-[370px] mx-auto -mb-[30%] rounded-[2.5rem] border-[10px] border-white shadow-[0_34px_52px_rgba(6,78,59,0.32)] transition-transform duration-500 md:group-hover:-translate-y-4 bg-[#0f172a]/20">
             <PhoneMockup screenshotSrc={screenshots.zephra || undefined} alt="Zephra mobile preview" accentClassName="bg-gradient-to-b from-[#6ee7b7] to-[#10b981]" topVisibleImageOnly />
           </div>
         </motion.div>
@@ -311,10 +274,10 @@ export default function ProjectGrid() {
       {/* Featured Big Card */}
       <motion.div
         id="aether"
-        initial={{ opacity: 0, scale: 0.98, y: 40 }}
+        initial={reduceMotion ? false : { opacity: 0, scale: 0.985, y: 28 }}
         whileInView={{ opacity: 1, scale: 1, y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.45 }}
         className="relative bg-[#10b981] rounded-[4rem] p-12 md:p-20 flex flex-col md:flex-row items-center gap-16 shadow-[0_20px_60px_rgba(16,185,129,0.2)] overflow-hidden scroll-mt-28"
       >
         <BracketButton onClick={() => setActiveProject('aether')} label="Open Aether project details popup" inverse />
@@ -324,13 +287,13 @@ export default function ProjectGrid() {
           <p className="text-[#a7f3d0] text-xl font-medium mb-12 max-w-md leading-relaxed">A virtual pet system that integrates journaling, habit tracking, emotional analytics, and autonomous AI behavior..</p>
         </div>
         <div className="md:w-1/2 relative w-full flex justify-center z-10">
-          <div className="w-[90%] sm:w-[76%] md:w-[56%] max-w-none md:max-w-[260px] aspect-[9/19] rounded-[2.7rem] border-[10px] border-white shadow-[0_18px_30px_rgba(6,78,59,0.28)] rotate-[-4deg] hover:rotate-0 transition-transform duration-500 overflow-hidden">
+          <div className="w-[90%] sm:w-[76%] md:w-[56%] max-w-none md:max-w-[260px] aspect-[9/19] rounded-[2.7rem] border-[10px] border-white shadow-[0_38px_56px_rgba(6,78,59,0.34)] rotate-[-4deg] hover:rotate-0 transition-transform duration-500 overflow-hidden">
             <PhoneMockup screenshotSrc={screenshots.aether || undefined} alt="Aether mobile preview" accentClassName="bg-gradient-to-b from-[#10b981] to-[#047857]" imageClassName="scale-[1.02]" topGapPx={2} />
           </div>
         </div>
 
         {/* Giant background blob */}
-        <div className="absolute top-[-20%] right-[-10%] w-[80%] h-[140%] bg-[#059669] rounded-full blur-3xl opacity-50 z-0 pointer-events-none"></div>
+        <div className="absolute top-[-20%] right-[-10%] w-[80%] h-[160%] bg-[#059669] rounded-full blur-3xl opacity-50 z-0 pointer-events-none"></div>
       </motion.div>
 
       <div className="mt-10 mb-6 w-full">
@@ -341,30 +304,38 @@ export default function ProjectGrid() {
             name: 'Mini-Minds',
             short: 'Fun e-learning with levels and mini exercises.',
             badge: 'E-Learning Prototype',
+            accentClassName: 'bg-gradient-to-b from-[#6ee7b7] to-[#10b981]',
           },
           {
             key: 'carsio' as const,
             name: 'Cars.IO',
             short: 'SQL retail DB for car sales and purchases.',
             badge: 'DBMS • SQL',
+            accentClassName: 'bg-gradient-to-b from-[#34d399] to-[#059669]',
           },
           {
             key: 'roledoc' as const,
             name: 'RoleDoc',
             short: 'RAG chatbot that talks with your documents.',
             badge: 'AI RAG Assistant',
+            accentClassName: 'bg-gradient-to-b from-[#10b981] to-[#047857]',
           },
           {
-            key: 'fastype' as const,
-            name: 'FasType',
-            short: 'React typing speed practice and WPM checks.',
-            badge: 'Utility App',
+            key: 'textotest' as const,
+            name: 'TexToTest',
+            short: ' Context based advanced MCQ generation',
+            badge: 'AI MCQ Generation',
+            accentClassName: 'bg-gradient-to-b from-[#86efac] to-[#10b981]',
           },
-        ].map((item) => (
-          <div
+        ].map((item, index) => (
+          <motion.div
             id={item.key}
             key={item.name}
-            className="relative bg-white rounded-[2.25rem] p-6 md:p-7 transition-all duration-300 hover:-translate-y-1.5 group flex flex-col min-h-[236px] shadow-[0_20px_60px_rgba(16,185,129,0.08)] scroll-mt-28"
+            initial={reduceMotion ? false : (isMobile ? { opacity: 0, x: index % 2 === 0 ? -34 : 34, y: 0 } : { opacity: 0, y: 20 })}
+            whileInView={{ opacity: 1, x: 0, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.36, ease: "easeOut", delay: isMobile ? index * 0.05 : 0 }}
+            className="relative bg-white rounded-[2.25rem] p-6 md:p-7 transition-all duration-300 hover:-translate-y-1.5 group flex flex-col min-h-[320px] shadow-[0_20px_60px_rgba(16,185,129,0.08)] scroll-mt-28 overflow-hidden"
           >
             <BracketButton
               onClick={() => setActiveProject(item.key)}
@@ -376,11 +347,12 @@ export default function ProjectGrid() {
               <p className="inline-flex w-fit text-[#10b981] font-bold text-[10px] tracking-[0.14em] uppercase bg-[#10b981]/10 px-3 py-1.5 rounded-full">{item.badge}</p>
               <h4 className="mt-4 text-[1.45rem] font-extrabold font-headline text-[#064e3f] leading-tight">{item.name}</h4>
               <p className="mt-2 text-[0.95rem] leading-relaxed text-[#064e3b]/80 font-medium">{item.short}</p>
-              <div className="mt-auto pt-5">
-                <div className="h-2 w-16 rounded-full bg-[#10b981]/30" />
-              </div>
             </div>
-          </div>
+
+            <div className="pointer-events-none absolute left-1/2 bottom-[-110%] md:bottom-[-128%] -translate-x-1/2 overflow-hidden aspect-[9/20] w-[62%] md:w-[83%] rounded-[1.5rem] md:rounded-[2rem] border-[6px] md:border-[8px] border-white shadow-[0_14px_22px_rgba(6,78,59,0.26)] bg-[#0f172a]/18">
+              <PhoneMockup screenshotSrc={screenshots[item.key]} alt={`${item.name} mini mobile preview`} accentClassName={item.accentClassName} topVisibleImageOnly />
+            </div>
+          </motion.div>
         ))}
         </div>
       </div>
@@ -391,90 +363,78 @@ export default function ProjectGrid() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[90] bg-[#052e24]/45 backdrop-blur-md md:p-8"
+            className="fixed inset-0 z-[90] bg-[#052e24]/40 backdrop-blur-sm md:p-8"
             onClick={() => setActiveProject(null)}
           >
             <motion.div
-              initial={{ opacity: 0, y: 36, scale: 0.98 }}
+              initial={{ opacity: 0, y: 22, scale: 0.99 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 26, scale: 0.98 }}
-              transition={{ duration: 0.28 }}
+              exit={{ opacity: 0, y: 16, scale: 0.99 }}
+              transition={{ duration: 0.2 }}
               onClick={(event) => event.stopPropagation()}
-                className="h-full w-full md:mx-auto md:h-[92vh] md:max-w-5xl overflow-hidden bg-white/65 border border-white/70 md:rounded-[2.5rem] shadow-[0_30px_80px_rgba(6,78,59,0.28)]"
+              className="h-full w-full md:mx-auto md:h-[88vh] md:max-w-4xl overflow-hidden bg-white/75 border border-white/70 md:rounded-[2.2rem] shadow-[0_26px_70px_rgba(6,78,59,0.22)]"
             >
-              <div className="h-full overflow-y-auto p-6 md:p-10">
-                <div className="flex items-start justify-between gap-4 mb-6 md:mb-8">
+              <div className="h-full overflow-y-auto no-scrollbar p-6 md:p-8">
+                <div className="flex items-start justify-between gap-4 mb-6">
                   <div>
-                    <p className="inline-flex px-4 py-1.5 rounded-full text-xs tracking-[0.16em] uppercase bg-emerald-900/10 text-emerald-900 font-semibold">
-                      {selectedProject.badge}
-                    </p>
-                    <h3 className="mt-4 text-4xl md:text-5xl font-black text-emerald-950 leading-tight">{selectedProject.name}</h3>
-                    <p className="mt-4 text-base md:text-lg text-emerald-900/85 max-w-3xl leading-relaxed">{selectedProject.summary}</p>
+                    <h3 className="text-3xl md:text-4xl font-black text-emerald-950 leading-tight">{selectedProject.name}</h3>
+                    <p className="mt-3 text-[15px] md:text-base text-emerald-900/85 max-w-2xl leading-relaxed">{selectedProject.description}</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => setActiveProject(null)}
-                    className="h-11 w-11 rounded-2xl border border-emerald-200 bg-white/80 text-emerald-900 text-xl font-semibold hover:bg-white transition-colors shrink-0"
+                    className="h-10 w-10 rounded-xl border border-emerald-200 bg-white/90 text-emerald-900 hover:bg-white transition-colors shrink-0 inline-flex items-center justify-center"
                     aria-label="Close popup"
                   >
-                    ×
+                    <span className="material-symbols-outlined text-[1.15rem] leading-none">close</span>
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-[1.15fr,0.85fr] gap-6 md:gap-8">
-                  <div className="rounded-[2rem] border border-white/70 bg-white/60 backdrop-blur-md p-5 md:p-6 shadow-[0_15px_40px_rgba(15,23,42,0.1)]">
-                    <h4 className="text-xl font-bold text-emerald-950">Project Insights</h4>
-                    <ul className="mt-4 space-y-3">
-                      {selectedProject.highlights.map((item) => (
-                        <li key={item} className="rounded-xl bg-white/75 border border-emerald-700/10 px-4 py-3 text-emerald-900/90">
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-
-                    <h5 className="mt-6 text-sm tracking-[0.14em] uppercase font-bold text-emerald-900/80">Tech Stack</h5>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {selectedProject.stack.map((tech) => (
-                        <span key={tech} className="px-3 py-1.5 rounded-full text-sm font-medium bg-emerald-900/10 text-emerald-900 border border-emerald-700/15">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+                  <div className="rounded-[1.5rem] border border-white/70 bg-white/65 p-4 md:p-5 shadow-[0_12px_32px_rgba(15,23,42,0.08)]">
+                    <p className="text-[11px] tracking-[0.12em] uppercase text-emerald-900/65 font-semibold">Worked On</p>
+                    <p className="mt-1 text-emerald-950 font-bold">{selectedProject.workedOn}</p>
                   </div>
-
-                    <div className="space-y-6">
-                      <div className="rounded-[2rem] border border-white/70 bg-white/60 backdrop-blur-md p-4 md:p-5 shadow-[0_15px_40px_rgba(15,23,42,0.1)]">
-                        <h4 className="text-sm tracking-[0.14em] uppercase font-bold text-emerald-900/80 mb-4">Project Links</h4>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          <a
-                            href={selectedProject.repoUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="rounded-2xl border border-emerald-700/15 bg-white/85 px-4 py-3 text-center font-semibold text-emerald-900 hover:bg-white transition-colors"
-                          >
-                            Open Repository
-                          </a>
-                          <a
-                            href={selectedProject.liveUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="rounded-2xl border border-emerald-700/15 bg-emerald-700 text-white px-4 py-3 text-center font-semibold hover:bg-emerald-800 transition-colors"
-                          >
-                            Open Live App
-                          </a>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      {selectedProject.stats.map((stat) => (
-                        <div key={stat.label} className="rounded-2xl border border-white/70 bg-white/70 px-4 py-3 shadow-[0_12px_26px_rgba(15,23,42,0.08)]">
-                          <p className="text-[11px] tracking-[0.12em] uppercase text-emerald-900/65 font-semibold">{stat.label}</p>
-                          <p className="mt-1.5 text-sm font-bold text-emerald-950">{stat.value}</p>
-                        </div>
-                      ))}
-                    </div>
+                  <div className="rounded-[1.5rem] border border-white/70 bg-white/65 p-4 md:p-5 shadow-[0_12px_32px_rgba(15,23,42,0.08)]">
+                    <p className="text-[11px] tracking-[0.12em] uppercase text-emerald-900/65 font-semibold">Domain</p>
+                    <p className="mt-1 text-emerald-950 font-bold">{selectedProject.domain}</p>
+                  </div>
+                  <div className="rounded-[1.5rem] border border-white/70 bg-white/65 p-4 md:p-5 shadow-[0_12px_32px_rgba(15,23,42,0.08)] md:col-span-2">
+                    <p className="text-[11px] tracking-[0.12em] uppercase text-emerald-900/65 font-semibold">Role</p>
+                    <p className="mt-1 text-emerald-950 font-bold">{selectedProject.role}</p>
                   </div>
                 </div>
+
+                <div className="mt-5 rounded-[1.7rem] border border-white/70 bg-white/65 p-5 md:p-6 shadow-[0_12px_32px_rgba(15,23,42,0.08)]">
+                  <h4 className="text-sm tracking-[0.14em] uppercase font-bold text-emerald-900/80">Tech Stack</h4>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {selectedProject.stack.map((tech) => (
+                      <span key={tech} className="px-3 py-1.5 rounded-full text-sm font-medium bg-emerald-900/10 text-emerald-900 border border-emerald-700/15">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <a
+                      href={selectedProject.repoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-2xl border border-emerald-700/15 bg-white/85 px-4 py-3 text-center font-semibold text-emerald-900 hover:bg-white transition-colors"
+                    >
+                      Open Repository
+                    </a>
+                    <a
+                      href={selectedProject.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-2xl border border-emerald-700/15 bg-emerald-700 text-white px-4 py-3 text-center font-semibold hover:bg-emerald-800 transition-colors"
+                    >
+                      Open Live App
+                    </a>
+                  </div>
+                </div>
+
               </div>
             </motion.div>
           </motion.div>
