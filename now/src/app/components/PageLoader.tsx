@@ -98,14 +98,14 @@ export default function PageLoader() {
             initial={{ y: 10, opacity: 0.25, scale: 0.98 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             transition={{ duration: 0.24, ease: "easeOut" }}
-            className="relative z-10 h-8 w-28 overflow-hidden rounded-full border border-white/70 bg-white/35 backdrop-blur-2xl"
+            className="relative z-10 h-7 w-24 overflow-hidden rounded-full border border-white/70 bg-white/35 backdrop-blur-2xl"
           >
             <div className="absolute inset-y-0 left-2 right-2 flex items-center justify-between">
-              {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((bar) => (
+              {[0, 1, 2, 3, 4, 5, 6].map((bar) => (
                 <motion.span
                   key={bar}
-                  className="block w-[2px] rounded-full bg-[#059669]"
-                  animate={{ height: [4, 7, 11, 14, 11, 7, 4], opacity: [0.35, 0.55, 0.85, 1, 0.85, 0.55, 0.35] }}
+                  className="block w-[3px] rounded-full bg-[#059669]"
+                  animate={{ height: [4, 7, 10, 14, 10, 7, 4], opacity: [0.35, 0.55, 0.85, 1, 0.85, 0.55, 0.35] }}
                   transition={{ repeat: Infinity, repeatType: "reverse", duration: 1.05, ease: "easeInOut", delay: bar * 0.04 }}
                 />
               ))}

@@ -4,19 +4,21 @@ import Image from "next/image";
 import mePhoto from "../assets/imgs/me.png";
 
 const coreStack = [
-    "Python",
-    "TypeScript",
-    "React",
-    "DevOps",
-    "CI/CD",
-    "FastAPI",
-    "RAG",
-    "ServiceNow",
-    "UI/UX",
-    "Figma",
-    "Prompt Engineering",
-    "PWA",
-    "JavaScript",
+    { name: "Git", icon: "https://img.icons8.com/color/96/git.png" },
+    { name: "GitHub", icon: "https://img.icons8.com/color/96/github--v1.png" },
+    { name: "Figma", icon: "https://img.icons8.com/color/96/figma--v1.png" },
+    { name: "Docker", icon: "https://img.icons8.com/color/96/docker.png" },
+    { name: "Python", icon: "https://img.icons8.com/color/96/python--v1.png" },
+    { name: "JavaScript", icon: "https://img.icons8.com/color/96/javascript--v1.png" },
+    { name: "React", icon: "https://img.icons8.com/color/96/react-native.png" },
+    { name: "Next.js", icon: "https://img.icons8.com/color/96/nextjs.png" },
+    { name: "Tailwind CSS", icon: "https://img.icons8.com/color/96/tailwindcss.png" },
+    { name: "Flutter", icon: "https://img.icons8.com/color/96/flutter.png" },
+    { name: "FastAPI", icon: "https://img.icons8.com/color/96/api-settings.png" },
+    { name: "SQL", icon: "https://img.icons8.com/color/96/sql.png" },
+    { name: "Workflow Automation", icon: "https://img.icons8.com/color/96/data-configuration.png" },
+    { name: "Prompt Engineering", icon: "https://img.icons8.com/color/96/chatgpt.png" },
+    { name: "PWA", icon: "https://img.icons8.com/color/96/web.png" },
 ];
 
 const journey = [
@@ -52,7 +54,7 @@ const loopTitles = [
 ];
 
 const focusAreas = [
-    { label: "DevOps & Delivery", level: 90 },
+    { label: "DevOps & Delivery", level: 80 },
     { label: "UI/UX Design", level: 92 },
     { label: "Full Stack Development", level: 79 },
     { label: "ServiceNow Workflows", level: 82 },
@@ -300,11 +302,21 @@ export default function About() {
                             </div>
                         ))}
                     </div>
-                    <div className="flex flex-wrap gap-3">
+                    <div className="grid grid-cols-4 sm:grid-cols-5 gap-2.5">
                         {coreStack.map((skill) => (
-                            <span key={skill} className="px-4 py-2 rounded-full bg-white/10 border border-white/20 text-[#d1fae5] font-semibold text-sm">
-                                {skill}
-                            </span>
+                            <div
+                                key={skill.name}
+                                className="rounded-xl border border-white/20 bg-white/10 px-1.5 py-2.5 flex items-center justify-center min-h-[56px]"
+                            >
+                                <img
+                                    src={skill.icon}
+                                    alt={`${skill.name} icon`}
+                                    loading="lazy"
+                                    width={28}
+                                    height={28}
+                                    className="h-7 w-7 object-contain"
+                                />
+                            </div>
                         ))}
                     </div>
                 </motion.article>

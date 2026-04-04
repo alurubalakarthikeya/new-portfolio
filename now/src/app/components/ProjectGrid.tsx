@@ -17,6 +17,7 @@ type PhoneMockupProps = {
   topVisibleImageOnly?: boolean;
   imageClassName?: string;
   topGapPx?: number;
+  frameClassName?: string;
 };
 
 type ProjectKey = 'calgpa' | 'zephra' | 'aether' | 'miniminds' | 'carsio' | 'roledoc' | 'textotest';
@@ -40,6 +41,75 @@ type PopupProject = {
   liveUrl: string;
 };
 
+type ProjectRating = {
+  count: number;
+  average: number;
+  starCounts: number[];
+};
+
+const projectKeys: ProjectKey[] = ['calgpa', 'zephra', 'aether', 'miniminds', 'carsio', 'roledoc', 'textotest'];
+
+type FaceMood = 'angry' | 'sad' | 'happy' | 'excited';
+
+function createEmptyRatings(): Record<ProjectKey, ProjectRating> {
+  return {
+    calgpa: { count: 0, average: 0, starCounts: [0, 0, 0, 0, 0] },
+    zephra: { count: 0, average: 0, starCounts: [0, 0, 0, 0, 0] },
+    aether: { count: 0, average: 0, starCounts: [0, 0, 0, 0, 0] },
+    miniminds: { count: 0, average: 0, starCounts: [0, 0, 0, 0, 0] },
+    carsio: { count: 0, average: 0, starCounts: [0, 0, 0, 0, 0] },
+    roledoc: { count: 0, average: 0, starCounts: [0, 0, 0, 0, 0] },
+    textotest: { count: 0, average: 0, starCounts: [0, 0, 0, 0, 0] },
+  };
+}
+
+function RatingFace({ mood, strokeClass }: { mood: FaceMood; strokeClass: string }) {
+  if (mood === 'angry') {
+    return (
+      <svg viewBox="0 0 24 24" className={`h-8 w-8 ${strokeClass}`} fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
+        <path d="M7.4 9.1l2-1.1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+        <path d="M16.6 9.1l-2-1.1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+        <circle cx="9" cy="10.4" r="1" fill="currentColor" />
+        <circle cx="15" cy="10.4" r="1" fill="currentColor" />
+        <path d="M7.3 17c1.4-1.8 2.9-2.6 4.7-2.6s3.3.8 4.7 2.6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  if (mood === 'sad') {
+    return (
+      <svg viewBox="0 0 24 24" className={`h-8 w-8 ${strokeClass}`} fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
+        <circle cx="9" cy="10" r="1" fill="currentColor" />
+        <circle cx="15" cy="10" r="1" fill="currentColor" />
+        <path d="M8 16.6c1.2-1.4 2.6-2.1 4-2.1s2.8.7 4 2.1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+        <path d="M16.2 11.4c0 1.1-.6 1.8-1.1 2.4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  if (mood === 'happy') {
+    return (
+      <svg viewBox="0 0 24 24" className={`h-8 w-8 ${strokeClass}`} fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
+        <path d="M8 9.7c.4.6.8.9 1.2.9s.8-.3 1.2-.9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+        <path d="M13.6 9.7c.4.6.8.9 1.2.9s.8-.3 1.2-.9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+        <path d="M7.4 14.7c1.5 2 3.1 3 4.6 3s3.1-1 4.6-3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" className={`h-8 w-8 ${strokeClass}`} fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M7.6 10.2c.3.5.8.8 1.3.8s1-.3 1.3-.8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M13.8 10.2c.3.5.8.8 1.3.8s1-.3 1.3-.8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M7 14.4h10a5 5 0 0 1-10 0Z" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 function BracketButton({ onClick, label, inverse = false, className = '', iconClassName = '' }: BracketButtonProps) {
   return (
     <button
@@ -57,9 +127,9 @@ function BracketButton({ onClick, label, inverse = false, className = '', iconCl
   );
 }
 
-function PhoneMockup({ screenshotSrc, alt, accentClassName, topVisibleImageOnly = false, imageClassName = '', topGapPx = 0 }: PhoneMockupProps) {
+function PhoneMockup({ screenshotSrc, alt, accentClassName, topVisibleImageOnly = false, imageClassName = '', topGapPx = 0, frameClassName = '' }: PhoneMockupProps) {
   return (
-    <div className="relative h-full w-full rounded-[2.1rem] overflow-hidden bg-[#f0fdf4]">
+    <div className={`relative h-full w-full overflow-hidden bg-[#f0fdf4] rounded-[2.1rem] ${frameClassName}`}>
       {screenshotSrc ? (
         topVisibleImageOnly ? (
           <div className="h-full w-full flex flex-col">
@@ -100,6 +170,8 @@ function PhoneMockup({ screenshotSrc, alt, accentClassName, topVisibleImageOnly 
 export default function ProjectGrid() {
   const [activeProject, setActiveProject] = useState<ProjectKey | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [ratings, setRatings] = useState<Record<ProjectKey, ProjectRating>>(createEmptyRatings);
+  const [isSubmittingRating, setIsSubmittingRating] = useState(false);
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -130,6 +202,86 @@ export default function ProjectGrid() {
     media.addEventListener("change", syncMobile);
     return () => media.removeEventListener("change", syncMobile);
   }, []);
+
+  useEffect(() => {
+    let stopped = false;
+
+    const fetchRatings = async () => {
+      try {
+        const response = await fetch('/api/project-ratings', { cache: 'no-store' });
+        if (!response.ok) {
+          return;
+        }
+        const data = (await response.json()) as { ratings?: Partial<Record<ProjectKey, ProjectRating>> };
+        if (!stopped && data.ratings) {
+          setRatings((prev) => ({ ...prev, ...data.ratings }));
+        }
+      } catch {
+        // Ignore transient network/server issues for soft realtime updates.
+      }
+    };
+
+    fetchRatings();
+    const intervalId = window.setInterval(fetchRatings, 4000);
+
+    return () => {
+      stopped = true;
+      window.clearInterval(intervalId);
+    };
+  }, []);
+
+  const submitRating = async (projectKey: ProjectKey, stars: number) => {
+    if (isSubmittingRating) {
+      return;
+    }
+
+    setIsSubmittingRating(true);
+    try {
+      const response = await fetch('/api/project-ratings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectKey, stars }),
+      });
+
+      if (!response.ok) {
+        return;
+      }
+
+      const data = (await response.json()) as { ratings?: Partial<Record<ProjectKey, ProjectRating>> };
+      if (data.ratings) {
+        setRatings((prev) => ({ ...prev, ...data.ratings }));
+      }
+    } catch {
+      // Ignore submit errors to avoid breaking project popup interactions.
+    } finally {
+      setIsSubmittingRating(false);
+    }
+  };
+
+  const renderRatingSummary = (projectKey: ProjectKey, compact = false) => {
+    const stats = ratings[projectKey] ?? { count: 0, average: 0, starCounts: [0, 0, 0, 0, 0] };
+    const filledStars = Math.round(stats.average);
+
+    return (
+      <div className={`mt-2 flex items-center gap-2 ${compact ? 'text-[11px]' : 'text-sm'}`}>
+        <span className="inline-flex gap-[2px] text-[#10b981]">
+          {[0, 1, 2, 3, 4].map((star) => (
+            <span key={star}>{star < filledStars ? '★' : '☆'}</span>
+          ))}
+        </span>
+        <span className="font-semibold text-emerald-900/80">
+          {stats.count > 0 ? `${stats.average.toFixed(1)} (${stats.count})` : 'No ratings yet'}
+        </span>
+      </div>
+    );
+  };
+
+  const ratingChoices = [
+    { stars: 1, mood: 'angry' as FaceMood, color: 'text-rose-600 border-rose-300 bg-rose-50' },
+    { stars: 2, mood: 'sad' as FaceMood, color: 'text-orange-600 border-orange-300 bg-orange-50' },
+    { stars: 4, mood: 'happy' as FaceMood, color: 'text-emerald-600 border-emerald-300 bg-emerald-50' },
+    { stars: 5, mood: 'excited' as FaceMood, color: 'text-green-600 border-green-300 bg-green-50' },
+  ] as const;
 
   const screenshots = {
     calgpa: calgpaShot,
@@ -218,6 +370,7 @@ export default function ProjectGrid() {
   };
 
   const selectedProject = activeProject ? popupProjects[activeProject] : null;
+  const selectedScreenshot = activeProject ? screenshots[activeProject] : undefined;
 
   return (
     <section id="projects" className="px-6 md:px-12 w-full max-w-7xl mx-auto scroll-mt-28">
@@ -241,7 +394,8 @@ export default function ProjectGrid() {
             <BracketButton onClick={() => setActiveProject('calgpa')} label="Open CalGPA project details popup" />
           <div className="flex flex-col relative z-10 w-full mb-10 text-center items-center">
             <h3 className="text-4xl font-extrabold font-headline text-[#064e3f] mb-5">CalGPA</h3>
-            <p className="text-[#10b981] font-bold text-sm tracking-widest uppercase bg-[#10b981]/10 px-4 py-1.5 rounded-full">Academic Tool • PWA</p><br />
+            {renderRatingSummary('calgpa')}
+            <p className="text-[#10b981] font-bold text-sm tracking-widest uppercase bg-[#10b981]/10 px-4 py-1.5 rounded-full mt-3">Academic Tool • PWA</p><br />
             <p className="text-[#10b981] text-xl font-medium mb-12 max-w-md leading-relaxed">CalGPA is a web app designed to help uni students analyze and check their semester performance</p>
 
           </div>
@@ -262,7 +416,8 @@ export default function ProjectGrid() {
             <BracketButton onClick={() => setActiveProject('zephra')} label="Open Zephra project details popup" />
           <div className="flex flex-col relative z-10 w-full mb-10 text-center items-center">
             <h3 className="text-4xl font-extrabold font-headline text-[#064e3f] mb-5">Zephra</h3>
-            <p className="text-[#059669] font-bold text-sm tracking-widest uppercase bg-[#059669]/10 px-4 py-1.5 rounded-full mb-4">Climate Tracking • PWA</p>
+            {renderRatingSummary('zephra')}
+            <p className="text-[#059669] font-bold text-sm tracking-widest uppercase bg-[#059669]/10 px-4 py-1.5 rounded-full mt-3 mb-4">Climate Tracking • PWA</p>
             <p className="text-[#10b981] text-xl font-medium mb-12 max-w-md leading-relaxed">A web app that merges NASA TEMPO satellite data with ground-based monitoring to provide real-time air quality forecasts.</p>
           </div>
           <div className="mt-auto relative overflow-hidden aspect-[9/42] w-[90%] md:w-[84%] max-w-none md:max-w-[370px] mx-auto -mb-[30%] rounded-[2.5rem] border-[10px] border-white shadow-[0_34px_52px_rgba(6,78,59,0.32)] transition-transform duration-500 md:group-hover:-translate-y-4 bg-[#0f172a]/20">
@@ -284,7 +439,8 @@ export default function ProjectGrid() {
         <div className="md:w-1/2 relative z-10">
           <span className="inline-block px-4 py-1.5 rounded-full bg-white text-[12px] font-extrabold font-headline text-[#059669] mb-8 uppercase tracking-widest shadow-sm">FEATURED APP</span>
           <h3 className="text-5xl md:text-[4.5rem] font-extrabold font-headline text-white mb-6 leading-none">Aether.</h3>
-          <p className="text-[#a7f3d0] text-xl font-medium mb-12 max-w-md leading-relaxed">A virtual pet system that integrates journaling, habit tracking, emotional analytics, and autonomous AI behavior..</p>
+          <div className="text-white/95">{renderRatingSummary('aether')}</div>
+          <p className="text-[#a7f3d0] text-xl font-medium mb-12 max-w-md leading-relaxed mt-3">A virtual pet system that integrates journaling, habit tracking, emotional analytics, and autonomous AI behavior..</p>
         </div>
         <div className="md:w-1/2 relative w-full flex justify-center z-10">
           <div className="w-[90%] sm:w-[76%] md:w-[56%] max-w-none md:max-w-[260px] aspect-[9/19] rounded-[2.7rem] border-[10px] border-white shadow-[0_38px_56px_rgba(6,78,59,0.34)] rotate-[-4deg] hover:rotate-0 transition-transform duration-500 overflow-hidden">
@@ -346,11 +502,18 @@ export default function ProjectGrid() {
             <div className="flex flex-col relative z-10 w-full h-full text-left pr-9">
               <p className="inline-flex w-fit text-[#10b981] font-bold text-[10px] tracking-[0.14em] uppercase bg-[#10b981]/10 px-3 py-1.5 rounded-full">{item.badge}</p>
               <h4 className="mt-4 text-[1.45rem] font-extrabold font-headline text-[#064e3f] leading-tight">{item.name}</h4>
+              {renderRatingSummary(item.key, true)}
               <p className="mt-2 text-[0.95rem] leading-relaxed text-[#064e3b]/80 font-medium">{item.short}</p>
             </div>
 
-            <div className="pointer-events-none absolute left-1/2 bottom-[-110%] md:bottom-[-128%] -translate-x-1/2 overflow-hidden aspect-[9/20] w-[62%] md:w-[83%] rounded-[1.5rem] md:rounded-[2rem] border-[6px] md:border-[8px] border-white shadow-[0_14px_22px_rgba(6,78,59,0.26)] bg-[#0f172a]/18">
-              <PhoneMockup screenshotSrc={screenshots[item.key]} alt={`${item.name} mini mobile preview`} accentClassName={item.accentClassName} topVisibleImageOnly />
+            <div className="pointer-events-none absolute left-1/2 bottom-[-110%] md:bottom-[-128%] -translate-x-1/2 overflow-hidden aspect-[9/20] w-[62%] md:w-[83%] rounded-[1.5rem] md:rounded-[2rem] border-[6px] md:border-[8px] border-white shadow-[0_14px_22px_rgba(6,78,59,0.26)] bg-[#0f172a]/18 transition-transform duration-500 md:group-hover:-translate-y-4">
+              <PhoneMockup
+                screenshotSrc={screenshots[item.key]}
+                alt={`${item.name} mini mobile preview`}
+                accentClassName={item.accentClassName}
+                frameClassName="rounded-none"
+                imageClassName="object-[center_14%]"
+              />
             </div>
           </motion.div>
         ))}
@@ -363,7 +526,7 @@ export default function ProjectGrid() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[90] bg-[#052e24]/40 backdrop-blur-sm md:p-8"
+            className="fixed inset-0 z-[90] bg-[#052e24]/45 backdrop-blur-sm md:p-8"
             onClick={() => setActiveProject(null)}
           >
             <motion.div
@@ -372,12 +535,15 @@ export default function ProjectGrid() {
               exit={{ opacity: 0, y: 16, scale: 0.99 }}
               transition={{ duration: 0.2 }}
               onClick={(event) => event.stopPropagation()}
-              className="h-full w-full md:mx-auto md:h-[88vh] md:max-w-4xl overflow-hidden bg-white/75 border border-white/70 md:rounded-[2.2rem] shadow-[0_26px_70px_rgba(6,78,59,0.22)]"
+              className="relative h-full w-full md:mx-auto md:h-[88vh] md:max-w-5xl overflow-hidden bg-[#f7fefb] border border-emerald-100 md:rounded-[2.2rem] shadow-[0_26px_70px_rgba(6,78,59,0.16)]"
             >
+              <div className="pointer-events-none absolute -top-20 right-6 h-40 w-40 rounded-full bg-[#10b981]/10 blur-3xl" />
               <div className="h-full overflow-y-auto no-scrollbar p-6 md:p-8">
                 <div className="flex items-start justify-between gap-4 mb-6">
                   <div>
-                    <h3 className="text-3xl md:text-4xl font-black text-emerald-950 leading-tight">{selectedProject.name}</h3>
+                    <p className="text-[11px] tracking-[0.14em] uppercase text-emerald-800/70 font-bold">Project Spotlight</p>
+                    <h3 className="mt-1 text-3xl md:text-4xl font-black text-emerald-950 leading-tight">{selectedProject.name}</h3>
+                    {activeProject ? renderRatingSummary(activeProject) : null}
                     <p className="mt-3 text-[15px] md:text-base text-emerald-900/85 max-w-2xl leading-relaxed">{selectedProject.description}</p>
                   </div>
                   <button
@@ -390,48 +556,80 @@ export default function ProjectGrid() {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
-                  <div className="rounded-[1.5rem] border border-white/70 bg-white/65 p-4 md:p-5 shadow-[0_12px_32px_rgba(15,23,42,0.08)]">
-                    <p className="text-[11px] tracking-[0.12em] uppercase text-emerald-900/65 font-semibold">Worked On</p>
-                    <p className="mt-1 text-emerald-950 font-bold">{selectedProject.workedOn}</p>
-                  </div>
-                  <div className="rounded-[1.5rem] border border-white/70 bg-white/65 p-4 md:p-5 shadow-[0_12px_32px_rgba(15,23,42,0.08)]">
-                    <p className="text-[11px] tracking-[0.12em] uppercase text-emerald-900/65 font-semibold">Domain</p>
-                    <p className="mt-1 text-emerald-950 font-bold">{selectedProject.domain}</p>
-                  </div>
-                  <div className="rounded-[1.5rem] border border-white/70 bg-white/65 p-4 md:p-5 shadow-[0_12px_32px_rgba(15,23,42,0.08)] md:col-span-2">
-                    <p className="text-[11px] tracking-[0.12em] uppercase text-emerald-900/65 font-semibold">Role</p>
-                    <p className="mt-1 text-emerald-950 font-bold">{selectedProject.role}</p>
-                  </div>
-                </div>
-
-                <div className="mt-5 rounded-[1.7rem] border border-white/70 bg-white/65 p-5 md:p-6 shadow-[0_12px_32px_rgba(15,23,42,0.08)]">
-                  <h4 className="text-sm tracking-[0.14em] uppercase font-bold text-emerald-900/80">Tech Stack</h4>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {selectedProject.stack.map((tech) => (
-                      <span key={tech} className="px-3 py-1.5 rounded-full text-sm font-medium bg-emerald-900/10 text-emerald-900 border border-emerald-700/15">
-                        {tech}
-                      </span>
-                    ))}
+                <div className="grid grid-cols-1 md:grid-cols-[260px_1fr] gap-5 md:gap-6">
+                  <div className="rounded-[1.5rem] border border-emerald-100 bg-white p-4 shadow-[0_12px_28px_rgba(15,23,42,0.06)]">
+                    <div className="mx-auto relative overflow-hidden aspect-[9/19] w-[78%] sm:w-[58%] md:w-full max-w-[220px] rounded-[1.45rem] border-[7px] border-white shadow-[0_18px_30px_rgba(6,78,59,0.2)] bg-[#0f172a]/20">
+                      <PhoneMockup
+                        screenshotSrc={selectedScreenshot}
+                        alt={`${selectedProject.name} popup preview`}
+                        accentClassName="bg-gradient-to-b from-[#34d399] to-[#059669]"
+                        frameClassName="rounded-none"
+                      />
+                    </div>
+                    <div className="mt-4 grid grid-cols-2 gap-2">
+                      <div className="rounded-xl border border-emerald-100 bg-emerald-50/70 px-3 py-2">
+                        <p className="text-[10px] uppercase tracking-[0.12em] text-emerald-800/70 font-bold">Year</p>
+                        <p className="text-sm font-bold text-emerald-950">{selectedProject.workedOn}</p>
+                      </div>
+                      <div className="rounded-xl border border-emerald-100 bg-emerald-50/70 px-3 py-2">
+                        <p className="text-[10px] uppercase tracking-[0.12em] text-emerald-800/70 font-bold">Role</p>
+                        <p className="text-sm font-bold text-emerald-950 line-clamp-2">{selectedProject.role}</p>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <a
-                      href={selectedProject.repoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="rounded-2xl border border-emerald-700/15 bg-white/85 px-4 py-3 text-center font-semibold text-emerald-900 hover:bg-white transition-colors"
-                    >
-                      Open Repository
-                    </a>
-                    <a
-                      href={selectedProject.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="rounded-2xl border border-emerald-700/15 bg-emerald-700 text-white px-4 py-3 text-center font-semibold hover:bg-emerald-800 transition-colors"
-                    >
-                      Open Live App
-                    </a>
+                  <div className="rounded-[1.5rem] border border-emerald-100 bg-white p-5 md:p-6 shadow-[0_12px_28px_rgba(15,23,42,0.06)]">
+                    <p className="text-[11px] tracking-[0.14em] uppercase text-emerald-900/65 font-bold">Domain</p>
+                    <p className="mt-1 text-lg font-bold text-emerald-950">{selectedProject.domain}</p>
+
+                    <div className="mt-4">
+                      <p className="text-[10px] uppercase tracking-[0.12em] text-emerald-800/70 font-bold">How Was This Project?</p>
+
+                      <div className="mt-2 grid grid-cols-4 gap-2">
+                        {ratingChoices.map((entry) => (
+                          <button
+                            key={entry.stars}
+                            type="button"
+                            onClick={() => activeProject && submitRating(activeProject, entry.stars)}
+                            disabled={isSubmittingRating}
+                            className="py-1 transition-transform hover:scale-110 disabled:opacity-60"
+                            aria-label={`Rate ${entry.stars} stars`}
+                          >
+                            <span className={`mx-auto flex h-11 w-11 items-center justify-center rounded-full border ${entry.color}`}>
+                              <RatingFace mood={entry.mood} strokeClass="text-current" />
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <h4 className="mt-5 text-sm tracking-[0.14em] uppercase font-bold text-emerald-900/80">Tech Stack</h4>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {selectedProject.stack.map((tech) => (
+                        <span key={tech} className="px-3 py-1.5 rounded-full text-sm font-medium bg-emerald-900/10 text-emerald-900 border border-emerald-700/15">
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <a
+                        href={selectedProject.repoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="rounded-2xl border border-emerald-700/20 bg-white px-4 py-3 text-center font-semibold text-emerald-900 hover:bg-emerald-50 transition-colors"
+                      >
+                        Open Repository
+                      </a>
+                      <a
+                        href={selectedProject.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="rounded-2xl border border-emerald-700/15 bg-emerald-700 text-white px-4 py-3 text-center font-semibold hover:bg-emerald-800 transition-colors"
+                      >
+                        Open Live App
+                      </a>
+                    </div>
                   </div>
                 </div>
 

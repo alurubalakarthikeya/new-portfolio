@@ -111,6 +111,7 @@
 	}
 }
 
+html,
 body {
 	background: linear-gradient(160deg, #e0f7ed 0%, #c8efde 34%, #d7f4e6 70%, #edf9f3 100%);
 	color: #064e3b;
@@ -120,6 +121,32 @@ body {
 	user-select: none;
 	-webkit-user-select: none;
 	-webkit-touch-callout: none;
+	cursor: url("/cursor/cursor-tri-21.png") 1 1, auto;
+}
+
+a,
+button,
+[role="button"],
+label,
+summary,
+select,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.cursor-pointer,
+[data-cursor="interactive"] {
+	cursor: url("/cursor/cursor-tri-21.png") 1 1, pointer;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="url"],
+input[type="number"],
+input[type="tel"],
+textarea {
+	cursor: text;
 }
 
 /* Portfolio-wide scrollbar with emerald theme */
