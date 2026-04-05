@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { Suspense } from "react";
 import "./globals.css";
 import MobileNav from "./components/MobileNav";
+import HomeQuickSearch from "./components/HomeQuickSearch";
 import SearchKeywordHighlighter from "./components/SearchKeywordHighlighter";
 import PageLoader from "./components/PageLoader";
 import ResumeDownloadFab from "./components/ResumeDownloadFab";
@@ -46,6 +47,7 @@ export default function RootLayout({
           <SearchKeywordHighlighter />
         </Suspense>
         <ResumeDownloadFab />
+        <HomeQuickSearch />
         <div className="flex-1 w-full relative z-10 flex flex-col">
           {children}
         </div>

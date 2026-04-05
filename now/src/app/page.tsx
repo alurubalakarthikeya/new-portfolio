@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Hero from "./components/Hero";
 import HomeBackground from "./components/HomeBackground";
-import HomeQuickSearch from "./components/HomeQuickSearch";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faCode } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedinIn, faGithub, faXTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons";
@@ -13,7 +12,6 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className="relative flex-1 flex flex-col justify-center overflow-hidden pb-28 md:pb-8 min-h-screen">
-      <HomeQuickSearch />
       <HomeBackground />
       <div className="relative z-10 flex-1 flex items-center">
         <Hero />

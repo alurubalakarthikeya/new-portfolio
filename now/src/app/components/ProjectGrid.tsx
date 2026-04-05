@@ -491,7 +491,7 @@ export default function ProjectGrid() {
             whileInView={{ opacity: 1, x: 0, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.36, ease: "easeOut", delay: isMobile ? index * 0.05 : 0 }}
-            className="relative bg-white rounded-[2.25rem] p-6 md:p-7 transition-all duration-300 hover:-translate-y-1.5 group flex flex-col min-h-[320px] shadow-[0_20px_60px_rgba(16,185,129,0.08)] scroll-mt-28 overflow-hidden"
+            className="relative bg-white rounded-[2.25rem] p-6 md:p-7 transition-all duration-300 hover:-translate-y-1.5 group flex flex-col min-h-[420px] shadow-[0_20px_60px_rgba(16,185,129,0.08)] scroll-mt-28 overflow-hidden"
           >
             <BracketButton
               onClick={() => setActiveProject(item.key)}
@@ -506,7 +506,7 @@ export default function ProjectGrid() {
               <p className="mt-2 text-[0.95rem] leading-relaxed text-[#064e3b]/80 font-medium">{item.short}</p>
             </div>
 
-            <div className="pointer-events-none absolute left-1/2 bottom-[-110%] md:bottom-[-128%] -translate-x-1/2 overflow-hidden aspect-[9/20] w-[62%] md:w-[83%] rounded-[1.5rem] md:rounded-[2rem] border-[6px] md:border-[8px] border-white shadow-[0_14px_22px_rgba(6,78,59,0.26)] bg-[#0f172a]/18 transition-transform duration-500 md:group-hover:-translate-y-4">
+            <div className="pointer-events-none absolute left-1/2 bottom-[-85%] md:bottom-[-85%] -translate-x-1/2 overflow-hidden aspect-[9/20] w-[62%] md:w-[83%] rounded-[1.5rem] md:rounded-[2rem] border-[6px] md:border-[8px] border-white shadow-[0_14px_22px_rgba(6,78,59,0.26)] bg-[#0f172a]/18 transition-transform duration-500 md:group-hover:-translate-y-4">
               <PhoneMockup
                 screenshotSrc={screenshots[item.key]}
                 alt={`${item.name} mini mobile preview`}
@@ -526,7 +526,7 @@ export default function ProjectGrid() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[90] bg-[#052e24]/45 backdrop-blur-sm md:p-8"
+            className="fixed inset-0 z-[1200] bg-[#052e24]/45 backdrop-blur-sm md:p-8"
             onClick={() => setActiveProject(null)}
           >
             <motion.div

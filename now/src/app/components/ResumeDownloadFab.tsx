@@ -1,24 +1,27 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import creeper1 from "../assets/forest assets/creeper-1.png";
 
 export default function ResumeDownloadFab() {
   const [showConfirm, setShowConfirm] = useState(false);
-  const [downloadCount, setDownloadCount] = useState(0);
+  const [downloadCount, setDownloadCount] = useState(() => {
+    if (typeof window === "undefined") {
+      return 0;
+    }
 
-  useEffect(() => {
     try {
       const stored = Number(window.localStorage.getItem("resumeDownloadCount") || "0");
-      if (!Number.isNaN(stored) && stored > 0) {
-        setDownloadCount(stored);
-      }
+      return !Number.isNaN(stored) && stored > 0 ? stored : 0;
     } catch {
       // Ignore storage errors and fallback to in-memory count.
+      return 0;
     }
-  }, []);
+  });
 
   const triggerDownload = () => {
     const nextCount = downloadCount + 1;
@@ -40,6 +43,7 @@ export default function ResumeDownloadFab() {
 
   return (
     <>
+    
       <motion.div
         initial={{ opacity: 0, x: 10 }}
         animate={{ opacity: 1, x: 0 }}
@@ -47,17 +51,23 @@ export default function ResumeDownloadFab() {
         className="fixed right-3 md:right-5 bottom-[4vh] z-[950]"
       >
         <div className="relative group">
+          <Image
+            src={creeper1}
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none select-none absolute -left-[150px] -bottom-10 w-[200px] opacity-60 rotate-[120deg] z-0"
+          />
+          
           <motion.p
             className="hidden md:block absolute right-11 top-1/2 -translate-y-1/2 whitespace-nowrap rounded-2xl border border-white/65 bg-white/38 backdrop-blur-xl px-2.5 py-1 text-[9px] font-bold tracking-[0.07em] uppercase text-[#047857] shadow-[0_10px_24px_rgba(6,95,70,0.14)] opacity-0 translate-x-1 pointer-events-none group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200"
           >
             Download my resume
           </motion.p>
-
           <button
             type="button"
             onClick={() => setShowConfirm(true)}
             aria-label="Open resume download confirmation"
-            className="group h-9 w-9 rounded-full border border-[#86efac]/55 bg-[#10b981] text-white shadow-[0_8px_18px_rgba(6,95,70,0.2)] hover:-translate-y-0.5 hover:bg-[#059669] active:translate-y-0 transition-all flex items-center justify-center"
+            className="group relative z-10 h-9 w-9 rounded-full border border-[#86efac]/55 bg-[#10b981] text-white shadow-[0_8px_18px_rgba(6,95,70,0.2)] hover:-translate-y-0.5 hover:bg-[#059669] active:translate-y-0 transition-all flex items-center justify-center"
           >
             <FontAwesomeIcon icon={faArrowDown} className="h-3 w-3" aria-hidden="true" />
           </button>

@@ -1,13 +1,17 @@
 "use client";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faCode } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedinIn, faGithub, faXTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons";
+import bush1 from "../assets/forest assets/bush-1.png";
+import bush2 from "../assets/forest assets/bush-2.png";
+import creeper1 from "../assets/forest assets/creeper-1.png";
 
 export default function Hero() {
   return (
-    <section id="hero" className="w-full relative min-h-screen md:min-h-0 md:h-full flex items-center justify-center px-6 md:px-12 scroll-mt-28">
+    <section id="hero" className="w-full relative min-h-screen md:min-h-0 md:h-full flex items-center justify-center px-6 md:px-12 pt-10 md:pt-12 pb-36 md:pb-44 scroll-mt-28">
 
       <div className="max-w-7xl w-full mx-auto flex flex-col items-center justify-center text-center relative z-10">
 
@@ -19,7 +23,7 @@ export default function Hero() {
           className="max-w-4xl"
         >
           <h1 className="text-5xl md:text-[4.8rem] font-extrabold font-headline text-[#064e3f] tracking-tighter leading-[1.05] mb-6">
-            Hi. I'm Karthikeya<span className="font-doto text-4xl sm:text-5xl md:text-7xl font-extrabold rubber-spin-dot inline-flex items-center justify-center w-[1em] h-[1em] leading-none align-middle">+</span><br />
+            Hi. I&apos;m Karthikeya<span className="font-doto text-4xl sm:text-5xl md:text-7xl font-extrabold rubber-spin-dot inline-flex items-center justify-center w-[1em] h-[1em] leading-none align-middle">+</span><br />
             <span className="text-[#ffffff] md:text-[2.9rem]">DevOps & SNow Developer</span>
           </h1>
 
@@ -73,16 +77,17 @@ export default function Hero() {
             </a>
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-6 items-center">
+          <div className="relative flex flex-col sm:flex-row justify-center gap-6 items-center">
             {/* Mega Button */}
             <Link href="/work"
-              className="group relative bg-[#10b981] text-white px-10 py-4 rounded-full font-headline font-bold text-lg hover:-translate-y-1 shadow-[0_6px_0_#059669] hover:shadow-[0_8px_0_#059669] active:translate-y-2 active:shadow-none transition-all duration-200"
+              className="group relative bg-[#10b981]/90 backdrop-blur-md text-white px-10 py-4 rounded-full font-headline font-bold text-lg hover:-translate-y-1 shadow-[0_6px_0_#059669] hover:shadow-[0_8px_0_#059669] active:translate-y-2 active:shadow-none transition-all duration-200 border border-[#86efac]/45"
             >
               Explore Work
             </Link>
           </div>
         </motion.div>
       </div>
+
     </section>
   );
 }

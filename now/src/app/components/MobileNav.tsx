@@ -1,6 +1,8 @@
 "use client";
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import bush2 from '../assets/forest assets/bush-2.png';
 
 export default function MobileNav() {
   const pathname = usePathname();
@@ -14,7 +16,13 @@ export default function MobileNav() {
 
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[999] w-auto">
-      <nav className="bg-[#d1fae5]/35 backdrop-blur-2xl rounded-full flex items-center justify-center p-1.5 shadow-[0_12px_32px_rgba(5,150,105,0.16)] border border-[#86efac]/45 gap-1">
+      <Image
+        src={bush2}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none select-none absolute left-7 bottom-0 -translate-x-[58%] w-28 opacity-80 z-0"
+      />
+      <nav className="relative z-10 bg-[#d1fae5]/35 backdrop-blur-2xl rounded-full flex items-center justify-center p-1.5 shadow-[0_12px_32px_rgba(5,150,105,0.16)] border border-[#86efac]/45 gap-1">
         {links.map((l) => {
           const isActive = pathname === l.href || (pathname.startsWith(l.href) && l.href !== '/');
           return (
