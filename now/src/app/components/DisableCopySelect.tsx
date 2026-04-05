@@ -4,9 +4,32 @@ import { useEffect } from "react";
 
 export default function DisableCopySelect() {
   useEffect(() => {
-    const prevent = (event: Event) => event.preventDefault();
+    const isEditableTarget = (target: EventTarget | null): boolean => {
+      if (!(target instanceof HTMLElement)) {
+        return false;
+      }
+
+      if (target.isContentEditable) {
+        return true;
+      }
+
+      const tagName = target.tagName.toLowerCase();
+      return tagName === "input" || tagName === "textarea" || tagName === "select";
+    };
+
+    const prevent = (event: Event) => {
+      if (isEditableTarget(event.target)) {
+        return;
+      }
+
+      event.preventDefault();
+    };
 
     const onKeyDown = (event: KeyboardEvent) => {
+      if (isEditableTarget(event.target)) {
+        return;
+      }
+
       if (!(event.ctrlKey || event.metaKey)) {
         return;
       }

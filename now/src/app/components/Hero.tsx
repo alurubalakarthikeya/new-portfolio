@@ -1,17 +1,13 @@
 "use client";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedinIn, faGithub, faXTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons";
-import bush1 from "../assets/forest assets/bush-1.png";
-import bush2 from "../assets/forest assets/bush-2.png";
-import creeper1 from "../assets/forest assets/creeper-1.png";
 
 export default function Hero() {
   return (
-    <section id="hero" className="w-full relative min-h-screen md:min-h-0 md:h-full flex items-center justify-center px-6 md:px-12 pt-10 md:pt-12 pb-36 md:pb-44 scroll-mt-28">
+    <section id="hero" className="w-full relative flex items-center justify-center px-6 md:px-12 py-12 md:py-14 scroll-mt-28">
 
       <div className="max-w-7xl w-full mx-auto flex flex-col items-center justify-center text-center relative z-10">
 
