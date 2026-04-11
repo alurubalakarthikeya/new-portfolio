@@ -27,7 +27,7 @@ const terminalCommands: Record<string, Array<string | { label: string; href: str
         { label: "linkedin: https://linkedin.com/in/alurubalakarthikeya", href: "https://linkedin.com/in/alurubalakarthikeya" },
         { label: "github: https://github.com/alurubalakarthikeya", href: "https://github.com/alurubalakarthikeya" },
         { label: "x: https://x.com/abalakarthikeya", href: "https://x.com/abalakarthikeya" },
-        { label: "youtube: https://youtube.com/@your-channel", href: "https://youtube.com/@your-channel" },
+        { label: "youtube: https://youtube.com/@cartyk", href: "https://youtube.com/@cartyk" },
     ],
 };
 

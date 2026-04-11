@@ -7,9 +7,9 @@ import { faLinkedinIn, faGithub, faXTwitter, faYoutube } from "@fortawesome/free
 
 export default function Hero() {
   return (
-    <section id="hero" className="w-full relative flex items-center justify-center px-6 md:px-12 py-12 md:py-14 scroll-mt-28">
+    <section id="hero" className="w-full relative flex items-center justify-center px-6 md:px-12 py-10 md:py-14 min-h-[70vh] md:min-h-0 scroll-mt-28">
 
-      <div className="max-w-7xl w-full mx-auto flex flex-col items-center justify-center text-center relative z-10">
+      <div className="max-w-7xl w-full mx-auto flex flex-col items-center justify-center text-center relative z-10 min-h-[60vh] md:min-h-0">
 
         {/* Massive Typography */}
         <motion.div

@@ -3,10 +3,9 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import bush2 from "../assets/forest assets/bush-2.png";
+import bush2 from "../assets/forest assets/pixelated_bush_v2.png";
 import creeper1 from "../assets/forest assets/creeper-1.png";
+import pixelatedArrow from "../assets/imgs/pixelated_arrow.png";
 
 type SearchEntry = {
   label: string;
@@ -195,17 +194,11 @@ export default function HomeQuickSearch() {
 
   return (
     <div className="fixed top-5 left-1/2 -translate-x-1/2 z-40 w-[min(78vw,22rem)]">
-              <Image
-          src={bush2}
-          alt=""
-          aria-hidden="true"
-          className="pointer-events-none select-none absolute -right-7 -top-3 w-14 rotate-[55deg] opacity-75 -z-100000"
-        />
         <Image
           src={bush2}
           alt=""
           aria-hidden="true"
-          className="pointer-events-none select-none absolute -right-7 -bottom-2 w-14 rotate-[125deg] opacity-75 -z-100000"
+          className="pointer-events-none select-none absolute -right-13 -top-3 w-25 rotate-[90deg] opacity-75 -z-100000"
         />
       <div className="relative rounded-full border border-[#86efac]/45 bg-[#d1fae5]/35 backdrop-blur-2xl shadow-[0_7px_18px_rgba(5,150,105,0.11)]">
         <label htmlFor="home-search" className="sr-only">
@@ -235,7 +228,12 @@ export default function HomeQuickSearch() {
           onClick={() => navigateToMatch(query)}
           className="absolute right-1.5 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full bg-[#10b981] text-white border border-[#10b981] shadow-[0_6px_14px_rgba(5,150,105,0.24)] hover:bg-[#059669] transition-colors flex items-center justify-center"
         >
-          <FontAwesomeIcon icon={faArrowRight} className="text-[0.7rem]" aria-hidden="true" />
+          <Image
+            src={pixelatedArrow}
+            alt=""
+            aria-hidden="true"
+            className="block absolute -right-0.45 h-[18px] w-[18px] object-contain mx-auto my-auto"
+          />
         </button>
       </div>
       {query ? (
