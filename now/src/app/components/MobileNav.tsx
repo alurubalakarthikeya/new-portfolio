@@ -20,13 +20,13 @@ export default function MobileNav() {
         src={bush1}
         alt=""
         aria-hidden="true"
-        className="pointer-events-none select-none absolute left-2 -bottom-4 -translate-x-[44%] w-29 opacity-80 -z-20 contrast-110 drop-shadow-[0_8px_14px_rgba(6,95,70,0.28)]"
+        className="pointer-events-none select-none absolute left-1 -bottom-2 -translate-x-[44%] w-23 opacity-80 -z-20 contrast-110 drop-shadow-[0_8px_14px_rgba(6,95,70,0.28)]"
       />
       <Image
         src={bush1}
         alt=""
         aria-hidden="true"
-        className="pointer-events-none select-none absolute right-2 -bottom-4 translate-x-[44%] w-29 opacity-70 -z-20 scale-x-[-1] contrast-110 drop-shadow-[0_8px_14px_rgba(6,95,70,0.28)]"
+        className="pointer-events-none select-none absolute right-1 -bottom-2 translate-x-[44%] w-23 opacity-70 -z-20 scale-x-[-1] contrast-110 drop-shadow-[0_8px_14px_rgba(6,95,70,0.28)]"
       />
       <nav className="relative z-10 bg-[#d1fae5]/35 backdrop-blur-2xl rounded-full flex items-center justify-center p-1 shadow-[0_12px_32px_rgba(5,150,105,0.16)] border border-[#86efac]/45 gap-[2px]">
         {links.map((l) => {

@@ -12,28 +12,45 @@ type PixelCell = {
   phase: number;
 };
 
-const PIXEL_SIZE = 16;
+type HomeBackgroundProps = {
+  quality?: "default" | "lite";
+};
+
+const QUALITY_CONFIG = {
+  default: {
+    pixelSize: 18,
+    targetFrameMs: 1000 / 30,
+    updateStride: 2,
+  },
+  lite: {
+    pixelSize: 22,
+    targetFrameMs: 1000 / 22,
+    updateStride: 3,
+  },
+} as const;
 
 function seededNoise(index: number): number {
   const x = Math.sin(index * 12.9898 + 78.233) * 43758.5453;
   return x - Math.floor(x);
 }
 
-export default function HomeBackground() {
+export default function HomeBackground({ quality = "default" }: HomeBackgroundProps) {
+  const config = QUALITY_CONFIG[quality];
+  const pixelSize = config.pixelSize;
   const [grid, setGrid] = useState({ cols: 0, rows: 0 });
   const pixelRefs = useRef<Array<HTMLSpanElement | null>>([]);
 
   useEffect(() => {
     const updateGrid = () => {
-      const cols = Math.ceil(window.innerWidth / PIXEL_SIZE) + 2;
-      const rows = Math.ceil(window.innerHeight / PIXEL_SIZE) + 2;
+      const cols = Math.ceil(window.innerWidth / pixelSize) + 2;
+      const rows = Math.ceil(window.innerHeight / pixelSize) + 2;
       setGrid({ cols, rows });
     };
 
     updateGrid();
     window.addEventListener("resize", updateGrid);
     return () => window.removeEventListener("resize", updateGrid);
-  }, []);
+  }, [pixelSize]);
 
   const cells = useMemo(() => {
     const total = grid.cols * grid.rows;
@@ -52,15 +69,15 @@ export default function HomeBackground() {
       const peak = Math.min(0.48, base + (0.07 + seededNoise(i * 11 + 29) * 0.1));
 
       return {
-        x: col * PIXEL_SIZE + PIXEL_SIZE / 2,
-        y: row * PIXEL_SIZE + PIXEL_SIZE / 2,
+        x: col * pixelSize + pixelSize / 2,
+        y: row * pixelSize + pixelSize / 2,
         lowOpacity: base,
         highOpacity: peak,
         flickerSpeed: 0.0007 + seededNoise(i * 17 + 3) * 0.0012,
         phase: seededNoise(i * 23 + 19) * Math.PI * 2,
       };
     });
-  }, [grid.cols, grid.rows]);
+  }, [grid.cols, grid.rows, pixelSize]);
 
   useEffect(() => {
     if (!cells.length) {
@@ -74,6 +91,8 @@ export default function HomeBackground() {
 
     let rafId = 0;
     let prevTime = performance.now();
+    let lastPaintTime = 0;
+    let framePartition = 0;
 
     const desktopVelocity = { vx: 0.23, vy: 0.18 };
     const mobileVelocity = { vx: 0.18, vy: 0.14 };
@@ -86,15 +105,27 @@ export default function HomeBackground() {
     };
 
     const render = (now: number) => {
+      if (document.visibilityState === "hidden") {
+        rafId = requestAnimationFrame(render);
+        return;
+      }
+
       const dt = Math.min(33, now - prevTime);
       prevTime = now;
+
+      if (now - lastPaintTime < config.targetFrameMs) {
+        rafId = requestAnimationFrame(render);
+        return;
+      }
+
+      lastPaintTime = now;
 
       const width = window.innerWidth;
       const height = window.innerHeight;
 
       const isMobile = width < 768;
-      const ballSize = isMobile ? PIXEL_SIZE * 8.8 : PIXEL_SIZE * 10.2;
-      const ballRadius = isMobile ? PIXEL_SIZE * 10.4 : PIXEL_SIZE * 12;
+      const ballSize = isMobile ? pixelSize * 8.8 : pixelSize * 10.2;
+      const ballRadius = isMobile ? pixelSize * 10.4 : pixelSize * 12;
 
       const targetVx = isMobile ? mobileVelocity.vx : desktopVelocity.vx;
       const targetVy = isMobile ? mobileVelocity.vy : desktopVelocity.vy;
@@ -125,7 +156,7 @@ export default function HomeBackground() {
         ball.vy = -Math.abs(ball.vy);
       }
 
-      for (let i = 0; i < cells.length; i += 1) {
+      for (let i = framePartition; i < cells.length; i += config.updateStride) {
         const el = pixelRefs.current[i];
         if (!el) {
           continue;
@@ -139,15 +170,17 @@ export default function HomeBackground() {
         const influence = Math.max(0, 1 - dist / ballRadius);
         const boosted = Math.min(0.95, flicker + influence * 0.72);
 
-        el.style.opacity = boosted.toFixed(3);
+        el.style.opacity = `${boosted}`;
       }
+
+      framePartition = (framePartition + 1) % config.updateStride;
 
       rafId = requestAnimationFrame(render);
     };
 
     rafId = requestAnimationFrame(render);
     return () => cancelAnimationFrame(rafId);
-  }, [cells]);
+  }, [cells, config, pixelSize]);
 
   return (
     <div className="home-pixel-field" aria-hidden="true">
@@ -155,7 +188,7 @@ export default function HomeBackground() {
         className="home-pixel-grid"
         style={
           {
-            "--home-pixel-size": `${PIXEL_SIZE}px`,
+            "--home-pixel-size": `${pixelSize}px`,
             "--home-pixel-cols": grid.cols,
           } as CSSProperties
         }

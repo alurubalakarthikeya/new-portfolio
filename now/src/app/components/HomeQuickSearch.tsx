@@ -198,7 +198,7 @@ export default function HomeQuickSearch() {
           src={bush2}
           alt=""
           aria-hidden="true"
-          className="pointer-events-none select-none absolute -right-13 -top-3 w-25 rotate-[90deg] opacity-75 -z-100000"
+          className="pointer-events-none select-none absolute -right-9 -top-2 w-20 rotate-[90deg] opacity-75 -z-100000"
         />
       <div className="relative rounded-full border border-[#86efac]/45 bg-[#d1fae5]/35 backdrop-blur-2xl shadow-[0_7px_18px_rgba(5,150,105,0.11)]">
         <label htmlFor="home-search" className="sr-only">
@@ -232,7 +232,7 @@ export default function HomeQuickSearch() {
             src={pixelatedArrow}
             alt=""
             aria-hidden="true"
-            className="block absolute -right-0.45 h-[18px] w-[18px] object-contain mx-auto my-auto"
+            className="block absolute -right-0.65 h-[20px] w-[20px] object-contain mx-auto my-auto"
           />
         </button>
       </div>

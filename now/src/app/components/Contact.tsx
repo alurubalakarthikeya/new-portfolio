@@ -139,7 +139,7 @@ export default function Contact() {
                             ))}
                         </div>
 
-                        <div className="mt-5 relative overflow-hidden rounded-[2rem] border border-emerald-200/60 bg-white/65 backdrop-blur-xl shadow-[0_20px_56px_rgba(6,95,70,0.14)] px-5 py-4 md:px-6">
+                        <div className="mt-5 relative overflow-hidden rounded-[2rem] border border-white/60 bg-white/40 backdrop-blur-xl shadow-[0_20px_56px_rgba(6,95,70,0.16)] px-5 py-4 md:px-6">
                             <div className="absolute inset-y-0 right-[-10%] w-[40%] rounded-full bg-[#10b981]/14 blur-2xl" />
                             <div className="relative z-10 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
                                 <a
@@ -161,11 +161,11 @@ export default function Contact() {
                         transition={{ duration: 0.5, delay: 0.06 }}
                         className={`w-full ${isTerminalZoomed ? "max-w-2xl" : "max-w-xl"} mx-auto lg:mx-0`}
                     >
-                        <div className="relative rounded-[1.5rem] border border-white/55 bg-white/14 backdrop-blur-3xl shadow-[0_24px_60px_rgba(6,95,70,0.2)] overflow-hidden text-left">
+                        <div className="relative rounded-[1.5rem] border border-white/60 bg-white/18 backdrop-blur-3xl shadow-[0_24px_60px_rgba(6,95,70,0.22)] overflow-hidden text-left">
                             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(255,255,255,0.5)_0%,rgba(255,255,255,0.06)_48%,rgba(255,255,255,0)_100%)]" />
                             <div className="pointer-events-none absolute -bottom-16 right-[-10%] h-48 w-48 rounded-full bg-emerald-200/35 blur-3xl" />
 
-                            <div className="relative z-10 h-11 px-4 flex items-center justify-between border-b border-white/50 bg-white/24 backdrop-blur-2xl">
+                            <div className="relative z-10 h-11 px-4 flex items-center justify-between border-b border-white/55 bg-white/28 backdrop-blur-2xl">
                                 <div className="flex items-center gap-2">
                                     <button
                                         type="button"
@@ -203,7 +203,7 @@ export default function Contact() {
                                     Window closed. Click the green dot to reopen.
                                 </div>
                             ) : isTerminalMinimized ? null : (
-                            <div className="relative z-10 px-4 md:px-5 py-4 font-mono bg-white/12 text-[12px] md:text-[13px] leading-relaxed text-[#064e3b]">
+                            <div className="relative z-10 px-4 md:px-5 py-4 font-mono bg-white/16 text-[12px] md:text-[13px] leading-relaxed text-[#064e3b]">
                                 <div className={`min-h-[220px] ${isTerminalZoomed ? "max-h-[360px]" : "max-h-[260px]"} overflow-y-auto pr-1 no-scrollbar`}>
                                     {terminalHistory.length === 0 ? (
                                         <p className="text-[#065f46]/78">Type <span className="text-[#059669]">help</span> and press Enter.</p>
@@ -269,7 +269,7 @@ export default function Contact() {
                             )}
                         </div>
 
-                        <div className="mt-4 relative rounded-[1.35rem] border border-white/55 bg-white/16 backdrop-blur-2xl shadow-[0_16px_44px_rgba(6,95,70,0.16)] overflow-hidden">
+                        <div className="mt-4 relative rounded-[1.35rem] border border-white/60 bg-white/20 backdrop-blur-2xl shadow-[0_16px_44px_rgba(6,95,70,0.18)] overflow-hidden">
                             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_84%_12%,rgba(16,185,129,0.2)_0%,rgba(16,185,129,0.02)_52%,rgba(16,185,129,0)_100%)]" />
                             <div className="relative z-10 px-4 md:px-5 py-4">
                                 <div className="flex items-center justify-between gap-3">

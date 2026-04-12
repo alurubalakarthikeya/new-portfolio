@@ -8,6 +8,7 @@ import SearchKeywordHighlighter from "./components/SearchKeywordHighlighter";
 import PageLoader from "./components/PageLoader";
 import ResumeDownloadFab from "./components/ResumeDownloadFab";
 import DisableCopySelect from "./components/DisableCopySelect";
+import RoutePixelBackground from "./components/RoutePixelBackground";
 import logo from "./assets/imgs/logo.png";
 
 const doto = localFont({
@@ -50,6 +51,7 @@ export default function RootLayout({
       </head>
       <body className={`${doto.variable} antialiased min-h-screen flex flex-col`}>
         <DisableCopySelect />
+        <RoutePixelBackground />
         <PageLoader />
         <Suspense fallback={null}>
           <SearchKeywordHighlighter />

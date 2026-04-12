@@ -389,7 +389,7 @@ export default function ProjectGrid() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.42 }}
-          className="bg-white rounded-[3rem] p-10 md:p-12 transition-all duration-300 hover:-translate-y-2 group flex flex-col h-[550px] overflow-hidden relative shadow-[0_20px_60px_rgba(16,185,129,0.08)] scroll-mt-28"
+          className="rounded-[3rem] border border-white/60 bg-white/34 backdrop-blur-lg p-10 md:p-12 transition-all duration-300 hover:-translate-y-2 group flex flex-col h-[550px] overflow-hidden relative shadow-[0_20px_60px_rgba(16,185,129,0.14)] scroll-mt-28"
         >
             <BracketButton onClick={() => setActiveProject('calgpa')} label="Open CalGPA project details popup" />
           <div className="flex flex-col relative z-10 w-full mb-10 text-center items-center">
@@ -411,7 +411,7 @@ export default function ProjectGrid() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.42, delay: 0.07 }}
-          className="bg-white rounded-[3rem] p-10 md:p-12 transition-all duration-300 hover:-translate-y-2 group flex flex-col h-[550px] overflow-hidden relative shadow-[0_20px_60px_rgba(16,185,129,0.08)] scroll-mt-28"
+          className="rounded-[3rem] border border-white/60 bg-white/34 backdrop-blur-lg p-10 md:p-12 transition-all duration-300 hover:-translate-y-2 group flex flex-col h-[550px] overflow-hidden relative shadow-[0_20px_60px_rgba(16,185,129,0.14)] scroll-mt-28"
         >
             <BracketButton onClick={() => setActiveProject('zephra')} label="Open Zephra project details popup" />
           <div className="flex flex-col relative z-10 w-full mb-10 text-center items-center">
@@ -433,11 +433,11 @@ export default function ProjectGrid() {
         whileInView={{ opacity: 1, scale: 1, y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.45 }}
-        className="relative bg-[#10b981] rounded-[4rem] p-12 md:p-20 flex flex-col md:flex-row items-center gap-16 shadow-[0_20px_60px_rgba(16,185,129,0.2)] overflow-hidden scroll-mt-28"
+        className="relative rounded-[4rem] border border-[#d1fae5]/55 bg-[#10b981]/44 backdrop-blur-lg p-12 md:p-20 flex flex-col md:flex-row items-center gap-16 shadow-[0_20px_60px_rgba(16,185,129,0.24)] overflow-hidden scroll-mt-28"
       >
         <BracketButton onClick={() => setActiveProject('aether')} label="Open Aether project details popup" inverse />
         <div className="md:w-1/2 relative z-10">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-white text-[12px] font-extrabold font-headline text-[#059669] mb-8 uppercase tracking-widest shadow-sm">FEATURED APP</span>
+          <span className="inline-block px-4 py-1.5 rounded-full border border-white/60 bg-white/72 text-[12px] font-extrabold font-headline text-[#059669] mb-8 uppercase tracking-widest shadow-sm backdrop-blur-sm">FEATURED APP</span>
           <h3 className="text-5xl md:text-[4.5rem] font-extrabold font-headline text-white mb-6 leading-none">Aether.</h3>
           <div className="text-white/95">{renderRatingSummary('aether')}</div>
           <p className="text-[#a7f3d0] text-xl font-medium mb-12 max-w-md leading-relaxed mt-3">A virtual pet system that integrates journaling, habit tracking, emotional analytics, and autonomous AI behavior..</p>
@@ -491,7 +491,7 @@ export default function ProjectGrid() {
             whileInView={{ opacity: 1, x: 0, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.36, ease: "easeOut", delay: isMobile ? index * 0.05 : 0 }}
-            className="relative bg-white rounded-[2.25rem] p-6 md:p-7 transition-all duration-300 hover:-translate-y-1.5 group flex flex-col min-h-[420px] shadow-[0_20px_60px_rgba(16,185,129,0.08)] scroll-mt-28 overflow-hidden"
+            className="relative rounded-[2.25rem] border border-white/60 bg-white/36 backdrop-blur-lg p-6 md:p-7 transition-all duration-300 hover:-translate-y-1.5 group flex flex-col min-h-[420px] shadow-[0_20px_60px_rgba(16,185,129,0.14)] scroll-mt-28 overflow-hidden"
           >
             <BracketButton
               onClick={() => setActiveProject(item.key)}

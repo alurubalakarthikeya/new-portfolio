@@ -2,12 +2,45 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+
+const CHAR_SEQUENCE = ["C", "A", "R", "T", "Y"] as const;
+
+const CHAR_PIXELS: Record<(typeof CHAR_SEQUENCE)[number], number[]> = {
+  // Pixel index map (3x3):
+  // 0 1 2
+  // 3 4 5
+  // 6 7 8
+  C: [0, 1, 2, 3, 6, 7, 8],
+  A: [0, 1, 2, 3, 4, 5, 6, 8],
+  R: [0, 1, 2, 3, 4, 5, 6, 8],
+  T: [0, 1, 2, 4, 7],
+  Y: [0, 2, 4, 7],
+};
 
 export default function PageLoader() {
   const pathname = usePathname();
   const [visible, setVisible] = useState(true);
+  const [charIndex, setCharIndex] = useState(0);
   const firstRunRef = useRef(true);
+  const activeChar = CHAR_SEQUENCE[charIndex];
+
+  const activePixels = useMemo(() => {
+    return new Set<number>(CHAR_PIXELS[activeChar]);
+  }, [activeChar]);
+
+  useEffect(() => {
+    if (!visible) {
+      return;
+    }
+
+    setCharIndex(0);
+    const intervalId = window.setInterval(() => {
+      setCharIndex((previous) => (previous + 1) % CHAR_SEQUENCE.length);
+    }, 420);
+
+    return () => window.clearInterval(intervalId);
+  }, [visible]);
 
   useEffect(() => {
     const onClickCapture = (event: MouseEvent) => {
@@ -98,17 +131,25 @@ export default function PageLoader() {
             initial={{ y: 10, opacity: 0.25, scale: 0.98 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             transition={{ duration: 0.24, ease: "easeOut" }}
-            className="relative z-10 h-7 w-24 overflow-hidden rounded-full border border-white/70 bg-white/35 backdrop-blur-2xl"
+            className="relative z-10 rounded-[0.72rem] border border-[#34d399]/75 bg-transparent p-1.5 shadow-[0_10px_18px_rgba(6,95,70,0.16)]"
           >
-            <div className="absolute inset-y-0 left-2 right-2 flex items-center justify-between">
-              {[0, 1, 2, 3, 4, 5, 6].map((bar) => (
+            <div className="grid grid-cols-3 gap-[3px]">
+              {Array.from({ length: 9 }, (_, pixelIndex) => {
+                const isActive = activePixels.has(pixelIndex);
+                return (
                 <motion.span
-                  key={bar}
-                  className="block w-[3px] rounded-full bg-[#059669]"
-                  animate={{ height: [4, 7, 10, 14, 10, 7, 4], opacity: [0.35, 0.55, 0.85, 1, 0.85, 0.55, 0.35] }}
-                  transition={{ repeat: Infinity, repeatType: "reverse", duration: 1.05, ease: "easeInOut", delay: bar * 0.04 }}
+                  key={pixelIndex}
+                  className="block h-[8px] w-[8px] rounded-[1px]"
+                  animate={{
+                    backgroundColor: isActive ? "#10b981" : "rgba(16,185,129,0.14)",
+                    opacity: isActive ? 1 : 0.22,
+                    boxShadow: isActive ? "0 0 0 1px rgba(6,95,70,0.18), 0 0 6px rgba(16,185,129,0.42)" : "0 0 0 1px rgba(6,95,70,0.08)",
+                    scale: isActive ? 1 : 0.92,
+                  }}
+                  transition={{ duration: 0.14, ease: "easeOut", delay: pixelIndex * 0.01 }}
                 />
-              ))}
+                );
+              })}
             </div>
           </motion.div>
         </motion.div>

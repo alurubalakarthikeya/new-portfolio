@@ -120,7 +120,7 @@ export default function About() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.55 }}
-                    className="lg:col-span-7 rounded-[2.6rem] border border-emerald-200/55 bg-white/55 backdrop-blur-xl p-7 md:p-9 shadow-[0_20px_56px_rgba(16,185,129,0.1)]"
+                    className="lg:col-span-7 rounded-[2.6rem] border border-white/60 bg-white/36 backdrop-blur-xl p-7 md:p-9 shadow-[0_20px_56px_rgba(16,185,129,0.12)]"
                 >
                     <p className="inline-flex px-4 py-1.5 rounded-full text-[11px] tracking-[0.16em] uppercase font-bold text-[#047857] bg-[#10b981]/12 border border-[#10b981]/25">
                         Product Stats
@@ -148,7 +148,7 @@ export default function About() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.55, delay: 0.08 }}
-                    className="lg:col-span-5 rounded-[2.6rem] border border-emerald-300/30 bg-gradient-to-br from-[#10b981] to-[#047857] p-7 md:p-9 shadow-[0_24px_64px_rgba(6,95,70,0.28)] text-white relative overflow-hidden"
+                    className="lg:col-span-5 rounded-[2.6rem] border border-[#d1fae5]/45 bg-gradient-to-br from-[#10b981]/70 to-[#047857]/70 backdrop-blur-xl p-7 md:p-9 shadow-[0_24px_64px_rgba(6,95,70,0.28)] text-white relative overflow-hidden"
                 >
                     <div className="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-white/14 blur-2xl" />
                     <div className="relative z-10 flex items-start gap-4">
@@ -192,7 +192,7 @@ export default function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45 }}
-                className="mb-10 rounded-[2.4rem] border border-emerald-100/75 bg-white/68 backdrop-blur-md p-5 md:p-7 shadow-[0_18px_45px_rgba(16,185,129,0.08)]"
+                className="mb-10 rounded-[2.4rem] border border-white/60 bg-white/38 backdrop-blur-lg p-5 md:p-7 shadow-[0_18px_45px_rgba(16,185,129,0.1)]"
             >
                 <div className="flex flex-row items-center justify-between gap-3 mb-4">
                     <div>
@@ -241,7 +241,7 @@ export default function About() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.55 }}
-                    className="lg:col-span-7 relative rounded-[2.3rem] bg-white/70 border border-emerald-100/70 p-7 md:p-9 shadow-[0_20px_50px_rgba(16,185,129,0.08)] overflow-hidden backdrop-blur-md"
+                    className="lg:col-span-7 relative rounded-[2.3rem] bg-white/38 border border-white/60 p-7 md:p-9 shadow-[0_20px_50px_rgba(16,185,129,0.1)] overflow-hidden backdrop-blur-lg"
                 >
                     <div className="absolute -top-20 -right-20 w-52 h-52 rounded-full bg-[#10b981]/15 blur-3xl" />
 
@@ -280,7 +280,7 @@ export default function About() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.55, delay: 0.08 }}
-                    className="lg:col-span-5 rounded-[2.3rem] bg-[#022c22]/95 text-white border border-emerald-400/20 p-7 md:p-9 shadow-[0_22px_54px_rgba(2,44,34,0.24)]"
+                    className="lg:col-span-5 rounded-[2.3rem] bg-[#022c22]/76 text-white border border-[#6ee7b7]/30 p-7 md:p-9 shadow-[0_22px_54px_rgba(2,44,34,0.24)] backdrop-blur-lg"
                 >
                     <h3 className="text-3xl font-extrabold font-headline mb-6">Skills</h3>
                     <div className="space-y-4 mb-7">
@@ -328,7 +328,7 @@ export default function About() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5 }}
-                    className="lg:col-span-4 rounded-[2.3rem] border border-emerald-100/75 bg-white/72 backdrop-blur-md p-7 md:p-9 shadow-[0_16px_40px_rgba(16,185,129,0.08)]"
+                    className="lg:col-span-4 rounded-[2.3rem] border border-white/60 bg-white/40 backdrop-blur-lg p-7 md:p-9 shadow-[0_16px_40px_rgba(16,185,129,0.1)]"
                 >
                     <h3 className="text-2xl md:text-3xl font-extrabold font-headline text-[#022c22]">Currently Working</h3>
                     <p className="mt-3 text-lg text-[#064e3b]/80 font-medium leading-relaxed">
@@ -342,7 +342,7 @@ export default function About() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.08 }}
-                    className="lg:col-span-8 rounded-[2.3rem] bg-white/72 border border-emerald-100/75 p-7 md:p-9 shadow-[0_18px_48px_rgba(16,185,129,0.08)] backdrop-blur-md"
+                    className="lg:col-span-8 rounded-[2.3rem] bg-white/40 border border-white/60 p-7 md:p-9 shadow-[0_18px_48px_rgba(16,185,129,0.1)] backdrop-blur-lg"
                 >
                     <h3 className="text-3xl md:text-4xl font-extrabold font-headline text-[#022c22] mb-6">Education</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

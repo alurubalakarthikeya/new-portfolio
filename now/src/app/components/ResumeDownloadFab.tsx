@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useState } from "react";
 import creeper1 from "../assets/forest assets/creeper-1.png";
 import pixelatedArrow from "../assets/imgs/pixelated_arrow.png";
-import bush1 from '../assets/forest assets/pixelated_bush.png';
 export default function ResumeDownloadFab() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [downloadCount, setDownloadCount] = useState(() => {
@@ -50,12 +49,6 @@ export default function ResumeDownloadFab() {
         className="fixed right-3 md:right-5 bottom-[4vh] z-[950]"
       >
         <div className="relative group">
-      <Image
-        src={bush1}
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none select-none absolute right-2 -bottom-4 translate-x-[44%] w-29 opacity-70 -z-20 scale-x-[-1] contrast-110 drop-shadow-[0_8px_14px_rgba(6,95,70,0.28)]"
-      />
           
           <motion.p
             className="hidden md:block absolute right-11 top-1/2 -translate-y-1/2 whitespace-nowrap rounded-2xl border border-white/65 bg-white/38 backdrop-blur-xl px-2.5 py-1 text-[9px] font-bold tracking-[0.07em] uppercase text-[#047857] shadow-[0_10px_24px_rgba(6,95,70,0.14)] opacity-0 translate-x-1 pointer-events-none group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200"
