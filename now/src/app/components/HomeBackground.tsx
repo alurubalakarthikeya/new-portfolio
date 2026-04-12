@@ -36,6 +36,7 @@ function seededNoise(index: number): number {
 
 export default function HomeBackground({ quality = "default" }: HomeBackgroundProps) {
   const config = QUALITY_CONFIG[quality];
+  const enableBallMotion = quality === "default";
   const pixelSize = config.pixelSize;
   const [grid, setGrid] = useState({ cols: 0, rows: 0 });
   const pixelRefs = useRef<Array<HTMLSpanElement | null>>([]);
@@ -129,31 +130,36 @@ export default function HomeBackground({ quality = "default" }: HomeBackgroundPr
 
       const targetVx = isMobile ? mobileVelocity.vx : desktopVelocity.vx;
       const targetVy = isMobile ? mobileVelocity.vy : desktopVelocity.vy;
-      ball.vx = ball.vx >= 0 ? Math.abs(targetVx) : -Math.abs(targetVx);
-      ball.vy = ball.vy >= 0 ? Math.abs(targetVy) : -Math.abs(targetVy);
+      if (enableBallMotion) {
+        ball.vx = ball.vx >= 0 ? Math.abs(targetVx) : -Math.abs(targetVx);
+        ball.vy = ball.vy >= 0 ? Math.abs(targetVy) : -Math.abs(targetVy);
 
-      ball.x += ball.vx * dt;
-      ball.y += ball.vy * dt;
+        ball.x += ball.vx * dt;
+        ball.y += ball.vy * dt;
 
-      const minX = ballSize / 2;
-      const minY = ballSize / 2;
-      const maxX = width - ballSize / 2;
-      const maxY = height - ballSize / 2;
+        const minX = ballSize / 2;
+        const minY = ballSize / 2;
+        const maxX = width - ballSize / 2;
+        const maxY = height - ballSize / 2;
 
-      if (ball.x <= minX) {
-        ball.x = minX;
-        ball.vx = Math.abs(ball.vx);
-      } else if (ball.x >= maxX) {
-        ball.x = maxX;
-        ball.vx = -Math.abs(ball.vx);
-      }
+        if (ball.x <= minX) {
+          ball.x = minX;
+          ball.vx = Math.abs(ball.vx);
+        } else if (ball.x >= maxX) {
+          ball.x = maxX;
+          ball.vx = -Math.abs(ball.vx);
+        }
 
-      if (ball.y <= minY) {
-        ball.y = minY;
-        ball.vy = Math.abs(ball.vy);
-      } else if (ball.y >= maxY) {
-        ball.y = maxY;
-        ball.vy = -Math.abs(ball.vy);
+        if (ball.y <= minY) {
+          ball.y = minY;
+          ball.vy = Math.abs(ball.vy);
+        } else if (ball.y >= maxY) {
+          ball.y = maxY;
+          ball.vy = -Math.abs(ball.vy);
+        }
+      } else {
+        ball.x = width * 0.5;
+        ball.y = height * 0.48;
       }
 
       for (let i = framePartition; i < cells.length; i += config.updateStride) {
@@ -180,7 +186,7 @@ export default function HomeBackground({ quality = "default" }: HomeBackgroundPr
 
     rafId = requestAnimationFrame(render);
     return () => cancelAnimationFrame(rafId);
-  }, [cells, config, pixelSize]);
+  }, [cells, config, enableBallMotion, pixelSize]);
 
   return (
     <div className="home-pixel-field" aria-hidden="true">

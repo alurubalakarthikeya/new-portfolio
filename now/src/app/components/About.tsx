@@ -112,6 +112,16 @@ export default function About() {
                 <p className="mt-6 text-lg md:text-xl text-[#064e3b]/80 font-medium max-w-3xl mx-auto">
                     I build at the intersection of DevOps, full stack engineering, UI/UX, and intelligent automation with ServiceNow as one of my core strengths.
                 </p>
+                <div className="mt-6 flex justify-center">
+                    <a
+                        href="/resume.pdf"
+                        download="Aluru-Bala-Karthikeya-Resume.pdf"
+                        className="inline-flex items-center gap-2 rounded-full border border-white/65 bg-white/52 px-6 py-3 text-sm md:text-base font-extrabold tracking-[0.08em] uppercase text-[#047857] shadow-[0_10px_24px_rgba(6,95,70,0.14)] backdrop-blur-md transition-all hover:-translate-y-0.5 hover:bg-white/72"
+                    >
+                        Download Resume
+                        <span className="material-symbols-outlined text-[1rem]" aria-hidden="true">download</span>
+                    </a>
+                </div>
             </motion.div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 mb-10">
@@ -152,7 +162,7 @@ export default function About() {
                 >
                     <div className="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-white/14 blur-2xl" />
                     <div className="relative z-10 flex items-start gap-4">
-                        <div className="relative w-20 h-20 rounded-2xl border border-white/50 overflow-hidden shadow-[0_14px_24px_rgba(0,0,0,0.2)] shrink-0">
+                        <div className="relative w-27 h-27 rounded-2xl border border-white/50 overflow-hidden shadow-[0_14px_24px_rgba(0,0,0,0.2)] shrink-0">
                             <Image
                                 src={mePhoto}
                                 alt="Karthikeya profile"
