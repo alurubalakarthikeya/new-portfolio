@@ -7,15 +7,16 @@ import { useEffect, useMemo, useRef, useState } from "react";
 const CHAR_SEQUENCE = ["C", "A", "R", "T", "Y"] as const;
 
 const CHAR_PIXELS: Record<(typeof CHAR_SEQUENCE)[number], number[]> = {
-  // Pixel index map (3x3):
-  // 0 1 2
-  // 3 4 5
-  // 6 7 8
-  C: [0, 1, 2, 3, 6, 7, 8],
-  A: [0, 1, 2, 3, 4, 5, 6, 8],
-  R: [0, 1, 2, 3, 4, 5, 6, 8],
-  T: [0, 1, 2, 4, 7],
-  Y: [0, 2, 4, 7],
+  // Pixel index map (4x4):
+  //  0  1  2  3
+  //  4  5  6  7
+  //  8  9 10 11
+  // 12 13 14 15
+  C: [0, 1, 2, 3, 4, 8, 12, 13, 14, 15],
+  A: [0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 15],
+  R: [0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 14],
+  T: [0, 1, 2, 3, 6, 10, 14],
+  Y: [0, 3, 5, 6, 10, 14],
 };
 
 export default function PageLoader() {
@@ -133,20 +134,20 @@ export default function PageLoader() {
             transition={{ duration: 0.24, ease: "easeOut" }}
             className="relative z-10 rounded-[0.72rem] border border-[#34d399]/75 bg-transparent p-1.5 shadow-[0_10px_18px_rgba(6,95,70,0.16)]"
           >
-            <div className="grid grid-cols-3 gap-[3px]">
-              {Array.from({ length: 9 }, (_, pixelIndex) => {
+            <div className="grid grid-cols-4 gap-[2px]">
+              {Array.from({ length: 16 }, (_, pixelIndex) => {
                 const isActive = activePixels.has(pixelIndex);
                 return (
                 <motion.span
                   key={pixelIndex}
-                  className="block h-[8px] w-[8px] rounded-[1px]"
+                  className="block h-[6px] w-[6px] rounded-[1px]"
                   animate={{
                     backgroundColor: isActive ? "#10b981" : "rgba(16,185,129,0.14)",
                     opacity: isActive ? 1 : 0.22,
                     boxShadow: isActive ? "0 0 0 1px rgba(6,95,70,0.18), 0 0 6px rgba(16,185,129,0.42)" : "0 0 0 1px rgba(6,95,70,0.08)",
                     scale: isActive ? 1 : 0.92,
                   }}
-                  transition={{ duration: 0.14, ease: "easeOut", delay: pixelIndex * 0.01 }}
+                  transition={{ duration: 0.14, ease: "easeOut", delay: pixelIndex * 0.006 }}
                 />
                 );
               })}

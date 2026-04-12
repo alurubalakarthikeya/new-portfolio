@@ -205,8 +205,13 @@ export default function ProjectGrid() {
 
   useEffect(() => {
     let stopped = false;
+    let intervalId: number | undefined;
 
     const fetchRatings = async () => {
+      if (document.visibilityState === 'hidden') {
+        return;
+      }
+
       try {
         const response = await fetch('/api/project-ratings', { cache: 'no-store' });
         if (!response.ok) {
@@ -222,11 +227,29 @@ export default function ProjectGrid() {
     };
 
     fetchRatings();
-    const intervalId = window.setInterval(fetchRatings, 4000);
+
+    const startPolling = () => {
+      if (intervalId) {
+        window.clearInterval(intervalId);
+      }
+      intervalId = window.setInterval(fetchRatings, 12000);
+    };
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchRatings();
+      }
+    };
+
+    startPolling();
+    document.addEventListener('visibilitychange', onVisibilityChange);
 
     return () => {
       stopped = true;
-      window.clearInterval(intervalId);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      if (intervalId) {
+        window.clearInterval(intervalId);
+      }
     };
   }, []);
 
@@ -378,7 +401,7 @@ export default function ProjectGrid() {
         <h2 className="text-4xl sm:text-5xl md:text-7xl font-extrabold font-headline font-doto text-[#064e3f] mb-6">
           Projects Made<span className="font-doto text-4xl sm:text-5xl md:text-7xl font-extrabold rubber-spin-dot inline-flex items-center justify-center w-[1em] h-[1em] leading-none align-middle">+</span>
         </h2>
-        <p className="text-xl text-[#064e3b]/80 font-medium">Clean interfaces meeting powerful logical backends.</p>
+        <p className="text-xl text-[#064e3b]/80 font-medium">Real projects I built to solve real problems, with design and engineering working together.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-20">
@@ -393,7 +416,7 @@ export default function ProjectGrid() {
         >
             <BracketButton onClick={() => setActiveProject('calgpa')} label="Open CalGPA project details popup" />
           <div className="flex flex-col relative z-10 w-full mb-10 text-center items-center">
-            <h3 className="text-4xl font-extrabold font-headline text-[#064e3f] mb-5">CalGPA</h3>
+            <h3 className="text-4xl font-extrabold font-doto text-[#064e3f] mb-5">CalGPA</h3>
             {renderRatingSummary('calgpa')}
             <p className="text-[#10b981] font-bold text-sm tracking-widest uppercase bg-[#10b981]/10 px-4 py-1.5 rounded-full mt-3">Academic Tool • PWA</p><br />
             <p className="text-[#10b981] text-xl font-medium mb-12 max-w-md leading-relaxed">CalGPA is a web app designed to help uni students analyze and check their semester performance</p>
@@ -415,7 +438,7 @@ export default function ProjectGrid() {
         >
             <BracketButton onClick={() => setActiveProject('zephra')} label="Open Zephra project details popup" />
           <div className="flex flex-col relative z-10 w-full mb-10 text-center items-center">
-            <h3 className="text-4xl font-extrabold font-headline text-[#064e3f] mb-5">Zephra</h3>
+            <h3 className="text-4xl font-extrabold font-doto text-[#064e3f] mb-5">Zephra</h3>
             {renderRatingSummary('zephra')}
             <p className="text-[#059669] font-bold text-sm tracking-widest uppercase bg-[#059669]/10 px-4 py-1.5 rounded-full mt-3 mb-4">Climate Tracking • PWA</p>
             <p className="text-[#10b981] text-xl font-medium mb-12 max-w-md leading-relaxed">A web app that merges NASA TEMPO satellite data with ground-based monitoring to provide real-time air quality forecasts.</p>
@@ -437,8 +460,8 @@ export default function ProjectGrid() {
       >
         <BracketButton onClick={() => setActiveProject('aether')} label="Open Aether project details popup" inverse />
         <div className="md:w-1/2 relative z-10">
-          <span className="inline-block px-4 py-1.5 rounded-full border border-white/60 bg-white/72 text-[12px] font-extrabold font-headline text-[#059669] mb-8 uppercase tracking-widest shadow-sm backdrop-blur-sm">FEATURED APP</span>
-          <h3 className="text-5xl md:text-[4.5rem] font-extrabold font-headline text-white mb-6 leading-none">Aether.</h3>
+          <span className="inline-block px-4 py-1.5 rounded-full border border-white/60 bg-white/72 text-[12px] font-extrabold font-doto text-[#059669] mb-8 uppercase tracking-widest shadow-sm backdrop-blur-sm">FEATURED APP</span>
+          <h3 className="text-5xl md:text-[4.5rem] font-extrabold font-doto text-white mb-6 leading-none">Aether.</h3>
           <div className="text-white/95">{renderRatingSummary('aether')}</div>
           <p className="text-[#a7f3d0] text-xl font-medium mb-12 max-w-md leading-relaxed mt-3">A virtual pet system that integrates journaling, habit tracking, emotional analytics, and autonomous AI behavior..</p>
         </div>
@@ -501,7 +524,7 @@ export default function ProjectGrid() {
             />
             <div className="flex flex-col relative z-10 w-full h-full text-left pr-9">
               <p className="inline-flex w-fit text-[#10b981] font-bold text-[10px] tracking-[0.14em] uppercase bg-[#10b981]/10 px-3 py-1.5 rounded-full">{item.badge}</p>
-              <h4 className="mt-4 text-[1.45rem] font-extrabold font-headline text-[#064e3f] leading-tight">{item.name}</h4>
+              <h4 className="mt-4 text-[1.45rem] font-extrabold font-doto text-[#064e3f] leading-tight">{item.name}</h4>
               {renderRatingSummary(item.key, true)}
               <p className="mt-2 text-[0.95rem] leading-relaxed text-[#064e3b]/80 font-medium">{item.short}</p>
             </div>
@@ -512,7 +535,7 @@ export default function ProjectGrid() {
                 alt={`${item.name} mini mobile preview`}
                 accentClassName={item.accentClassName}
                 frameClassName="rounded-none"
-                imageClassName="object-[center_14%]"
+                imageClassName="object-[center_13%]"
               />
             </div>
           </motion.div>
@@ -542,7 +565,7 @@ export default function ProjectGrid() {
                 <div className="flex items-start justify-between gap-4 mb-6">
                   <div>
                     <p className="text-[11px] tracking-[0.14em] uppercase text-emerald-800/70 font-bold">Project Spotlight</p>
-                    <h3 className="mt-1 text-3xl md:text-4xl font-black text-emerald-950 leading-tight">{selectedProject.name}</h3>
+                    <h3 className="mt-1 text-3xl md:text-4xl font-black font-doto text-emerald-950 leading-tight">{selectedProject.name}</h3>
                     {activeProject ? renderRatingSummary(activeProject) : null}
                     <p className="mt-3 text-[15px] md:text-base text-emerald-900/85 max-w-2xl leading-relaxed">{selectedProject.description}</p>
                   </div>
@@ -579,11 +602,11 @@ export default function ProjectGrid() {
                   </div>
 
                   <div className="rounded-[1.5rem] border border-emerald-100 bg-white p-5 md:p-6 shadow-[0_12px_28px_rgba(15,23,42,0.06)]">
-                    <p className="text-[11px] tracking-[0.14em] uppercase text-emerald-900/65 font-bold">Domain</p>
+                    <p className="text-[11px] tracking-[0.14em] uppercase text-emerald-900/65 font-bold font-doto">Domain</p>
                     <p className="mt-1 text-lg font-bold text-emerald-950">{selectedProject.domain}</p>
 
                     <div className="mt-4">
-                      <p className="text-[10px] uppercase tracking-[0.12em] text-emerald-800/70 font-bold">How Was This Project?</p>
+                      <p className="text-[10px] uppercase tracking-[0.12em] text-emerald-800/70 font-bold font-doto">How Was This Project?</p>
 
                       <div className="mt-2 grid grid-cols-4 gap-2">
                         {ratingChoices.map((entry) => (
@@ -603,7 +626,7 @@ export default function ProjectGrid() {
                       </div>
                     </div>
 
-                    <h4 className="mt-5 text-sm tracking-[0.14em] uppercase font-bold text-emerald-900/80">Tech Stack</h4>
+                    <h4 className="mt-5 text-sm tracking-[0.14em] uppercase font-bold font-doto text-emerald-900/80">Tech Stack</h4>
                     <div className="mt-3 flex flex-wrap gap-2">
                       {selectedProject.stack.map((tech) => (
                         <span key={tech} className="px-3 py-1.5 rounded-full text-sm font-medium bg-emerald-900/10 text-emerald-900 border border-emerald-700/15">

@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import bush2 from "../assets/forest assets/pixelated_bush_v2.png";
 import creeper1 from "../assets/forest assets/creeper-1.png";
@@ -13,6 +13,8 @@ type SearchEntry = {
   href: string;
   keywords: string[];
 };
+
+const SEARCHABLE_SELECTOR = "h1,h2,h3,h4,h5,h6,p,li,span,a,button,label,dt,dd";
 
 const searchIndex: SearchEntry[] = [
   {
@@ -151,9 +153,107 @@ function scoreEntry(entry: SearchEntry, rawQuery: string): number {
   return score;
 }
 
+function getNearestAnchor(element: Element, pathname: string): string {
+  const anchorHost = element.closest("[id]") as HTMLElement | null;
+  if (anchorHost?.id) {
+    return `${pathname}#${anchorHost.id}`;
+  }
+
+  return pathname;
+}
+
+function isElementVisible(element: HTMLElement): boolean {
+  const style = window.getComputedStyle(element);
+  if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) {
+    return false;
+  }
+
+  const rect = element.getBoundingClientRect();
+  if (rect.width < 1 || rect.height < 1) {
+    return false;
+  }
+
+  return rect.bottom >= 0 && rect.top <= window.innerHeight;
+}
+
+function collectVisibleEntries(pathname: string): SearchEntry[] {
+  const root = document.querySelector("main");
+  if (!root) {
+    return [];
+  }
+
+  const seen = new Set<string>();
+  const entries: SearchEntry[] = [];
+  const nodes = root.querySelectorAll<HTMLElement>(SEARCHABLE_SELECTOR);
+
+  for (const node of nodes) {
+    if (!isElementVisible(node)) {
+      continue;
+    }
+
+    const text = (node.textContent ?? "").replace(/\s+/g, " ").trim();
+    if (text.length < 2) {
+      continue;
+    }
+
+    const context = text.slice(0, 140);
+    const key = `${context.toLowerCase()}::${getNearestAnchor(node, pathname)}`;
+    if (seen.has(key)) {
+      continue;
+    }
+
+    seen.add(key);
+    entries.push({
+      label: context.slice(0, 44),
+      context,
+      href: getNearestAnchor(node, pathname),
+      keywords: tokenize(context),
+    });
+
+    if (entries.length >= 220) {
+      break;
+    }
+  }
+
+  return entries;
+}
+
 export default function HomeQuickSearch() {
   const router = useRouter();
+  const pathname = usePathname();
   const [query, setQuery] = useState("");
+  const [visibleIndex, setVisibleIndex] = useState<SearchEntry[]>([]);
+
+  useEffect(() => {
+    let rafId = 0;
+    let timeoutId: number | undefined;
+
+    const updateIndex = () => {
+      setVisibleIndex(collectVisibleEntries(pathname));
+    };
+
+    const scheduleUpdate = () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+      rafId = requestAnimationFrame(updateIndex);
+    };
+
+    timeoutId = window.setTimeout(updateIndex, 80);
+    window.addEventListener("resize", scheduleUpdate);
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+
+    return () => {
+      if (timeoutId) {
+        window.clearTimeout(timeoutId);
+      }
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+      window.removeEventListener("resize", scheduleUpdate);
+      window.removeEventListener("scroll", scheduleUpdate);
+    };
+  }, [pathname]);
 
   const matches = useMemo(() => {
     const q = query.trim();
@@ -161,13 +261,13 @@ export default function HomeQuickSearch() {
       return [] as SearchEntry[];
     }
 
-    return [...searchIndex]
+    return [...searchIndex, ...visibleIndex]
       .map((entry) => ({ entry, score: scoreEntry(entry, q) }))
       .filter((item) => item.score > 0)
       .sort((a, b) => b.score - a.score)
         .slice(0, 8)
       .map((item) => item.entry);
-  }, [query]);
+  }, [query, visibleIndex]);
 
   const buildSearchHref = (baseHref: string, term: string): string => {
     const cleanTerm = term.trim();
@@ -182,10 +282,7 @@ export default function HomeQuickSearch() {
   };
 
   const navigateToMatch = (value: string, explicitHref?: string) => {
-    const href = explicitHref ?? [...searchIndex]
-      .map((entry) => ({ entry, score: scoreEntry(entry, value) }))
-      .filter((item) => item.score > 0)
-      .sort((a, b) => b.score - a.score)[0]?.entry.href;
+    const href = explicitHref ?? matches[0]?.href;
 
     if (href) {
       router.push(buildSearchHref(href, value));
@@ -252,7 +349,7 @@ export default function HomeQuickSearch() {
             ))}
           </div>
         ) : (
-          <p className="mt-1.5 text-center text-[11px] font-semibold text-[#065f46]/70">No match yet. Try: Zephra, DevOps, Contact, GPA</p>
+          <p className="mt-1.5 text-center text-[11px] font-semibold text-[#065f46]/70">No match in visible content yet. Try a different keyword.</p>
         )
       ) : null}
     </div>

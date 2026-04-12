@@ -40,17 +40,57 @@ export default function HomeBackground({ quality = "default" }: HomeBackgroundPr
   const pixelSize = config.pixelSize;
   const [grid, setGrid] = useState({ cols: 0, rows: 0 });
   const pixelRefs = useRef<Array<HTMLSpanElement | null>>([]);
+  const opacityCacheRef = useRef<number[]>([]);
+  const viewportRef = useRef({ width: 0, height: 0 });
 
   useEffect(() => {
+    let rafId = 0;
+
+    const applyGrid = (width: number, height: number) => {
+      const cols = Math.ceil(width / pixelSize) + 2;
+      const rows = Math.ceil(height / pixelSize) + 2;
+      setGrid((prev) => (prev.cols === cols && prev.rows === rows ? prev : { cols, rows }));
+      viewportRef.current = { width, height };
+    };
+
     const updateGrid = () => {
-      const cols = Math.ceil(window.innerWidth / pixelSize) + 2;
-      const rows = Math.ceil(window.innerHeight / pixelSize) + 2;
-      setGrid({ cols, rows });
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const previous = viewportRef.current;
+      const isMobile = width < 768;
+
+      if (!previous.width || !previous.height) {
+        applyGrid(width, height);
+        return;
+      }
+
+      const widthChanged = Math.abs(width - previous.width) >= 1;
+      const heightThreshold = isMobile ? pixelSize * 2 : pixelSize;
+      const heightChanged = Math.abs(height - previous.height) >= heightThreshold;
+
+      if (widthChanged || heightChanged) {
+        applyGrid(width, height);
+      }
+    };
+
+    const scheduleUpdate = () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+      rafId = requestAnimationFrame(updateGrid);
     };
 
     updateGrid();
-    window.addEventListener("resize", updateGrid);
-    return () => window.removeEventListener("resize", updateGrid);
+    window.addEventListener("resize", scheduleUpdate, { passive: true });
+    window.addEventListener("orientationchange", scheduleUpdate, { passive: true });
+
+    return () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+      window.removeEventListener("resize", scheduleUpdate);
+      window.removeEventListener("orientationchange", scheduleUpdate);
+    };
   }, [pixelSize]);
 
   const cells = useMemo(() => {
@@ -79,6 +119,30 @@ export default function HomeBackground({ quality = "default" }: HomeBackgroundPr
       };
     });
   }, [grid.cols, grid.rows, pixelSize]);
+
+  const staticInfluence = useMemo(() => {
+    if (enableBallMotion || !cells.length) {
+      return null;
+    }
+
+    if (typeof window === "undefined") {
+      return null;
+    }
+
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const isMobile = width < 768;
+    const ballRadius = isMobile ? pixelSize * 10.4 : pixelSize * 12;
+    const anchorX = width * 0.5;
+    const anchorY = height * 0.48;
+
+    return cells.map((cell) => {
+      const dx = cell.x - anchorX;
+      const dy = cell.y - anchorY;
+      const dist = Math.hypot(dx, dy);
+      return Math.max(0, 1 - dist / ballRadius);
+    });
+  }, [cells, enableBallMotion, pixelSize]);
 
   useEffect(() => {
     if (!cells.length) {
@@ -170,13 +234,13 @@ export default function HomeBackground({ quality = "default" }: HomeBackgroundPr
 
         const cell = cells[i];
         const flicker = cell.lowOpacity + ((Math.sin(now * cell.flickerSpeed + cell.phase) + 1) / 2) * (cell.highOpacity - cell.lowOpacity);
-        const dx = cell.x - ball.x;
-        const dy = cell.y - ball.y;
-        const dist = Math.hypot(dx, dy);
-        const influence = Math.max(0, 1 - dist / ballRadius);
+        const influence = staticInfluence ? staticInfluence[i] : Math.max(0, 1 - Math.hypot(cell.x - ball.x, cell.y - ball.y) / ballRadius);
         const boosted = Math.min(0.95, flicker + influence * 0.72);
-
-        el.style.opacity = `${boosted}`;
+        const previous = opacityCacheRef.current[i];
+        if (previous === undefined || Math.abs(previous - boosted) > 0.015) {
+          el.style.opacity = `${boosted}`;
+          opacityCacheRef.current[i] = boosted;
+        }
       }
 
       framePartition = (framePartition + 1) % config.updateStride;
@@ -186,7 +250,11 @@ export default function HomeBackground({ quality = "default" }: HomeBackgroundPr
 
     rafId = requestAnimationFrame(render);
     return () => cancelAnimationFrame(rafId);
-  }, [cells, config, enableBallMotion, pixelSize]);
+  }, [cells, config, enableBallMotion, pixelSize, staticInfluence]);
+
+  useEffect(() => {
+    opacityCacheRef.current = [];
+  }, [cells.length, pixelSize, quality]);
 
   return (
     <div className="home-pixel-field" aria-hidden="true">

@@ -110,7 +110,7 @@ export default function About() {
                     With Passion<span className="font-doto text-4xl sm:text-5xl md:text-7xl font-extrabold rubber-spin-dot inline-flex items-center justify-center w-[1em] h-[1em] leading-none align-middle">+</span>
                 </h2>
                 <p className="mt-6 text-lg md:text-xl text-[#064e3b]/80 font-medium max-w-3xl mx-auto">
-                    I build at the intersection of DevOps, full stack engineering, UI/UX, and intelligent automation with ServiceNow as one of my core strengths.
+                    I enjoy building products end-to-end, from thoughtful UI to reliable backend systems, with DevOps and ServiceNow shaping how I ship.
                 </p>
                 <div className="mt-6 flex justify-center">
                     <a
@@ -135,7 +135,7 @@ export default function About() {
                     <p className="inline-flex px-4 py-1.5 rounded-full text-[11px] tracking-[0.16em] uppercase font-bold text-[#047857] bg-[#10b981]/12 border border-[#10b981]/25">
                         Product Stats
                     </p>
-                    <h3 className="mt-5 text-3xl md:text-5xl font-extrabold font-headline text-[#022c22] leading-[1.04]">
+                    <h3 className="mt-5 text-3xl md:text-5xl font-extrabold font-doto text-[#022c22] leading-[1.04]">
                         Apps with clean UI,
                         and real Use.
                     </h3>
@@ -255,11 +255,11 @@ export default function About() {
                 >
                     <div className="absolute -top-20 -right-20 w-52 h-52 rounded-full bg-[#10b981]/15 blur-3xl" />
 
-                    <h3 className="text-3xl md:text-4xl font-extrabold font-headline text-[#022c22] leading-tight mb-4">About Me</h3>
+                    <h3 className="text-3xl md:text-4xl font-extrabold font-doto text-[#022c22] leading-tight mb-4">About Me</h3>
                     <p className="text-lg text-[#064e3b]/85 leading-relaxed font-medium">
                         Beyond development, I also help professionals improve their LinkedIn presence and personal branding by helping them optimize their profiles for better visibility and opportunities.
                     </p>
-                    <h4 className="text-1xl md:text-2xl font-extrabold font-headline text-[#022c22] leading-tight mt-4">Hobbies</h4>
+                    <h4 className="text-1xl md:text-2xl font-extrabold font-doto text-[#022c22] leading-tight mt-4">Hobbies</h4>
                     <div className="relative z-10 mt-6 flex flex-wrap gap-2.5">
                         {[
                             "Drawing",
@@ -276,7 +276,7 @@ export default function About() {
                             </span>
                         ))}
                     </div>
-                    <h4 className="text-1xl md:text-2xl font-extrabold font-headline text-[#022c22] leading-tight mt-6">Languages I Speak:</h4>
+                    <h4 className="text-1xl md:text-2xl font-extrabold font-doto text-[#022c22] leading-tight mt-6">Languages I Speak:</h4>
                     <p className="text-lg text-[#064e3b]/85 leading-relaxed font-medium mt-4">
                      - English (Professional proficiency) <br />
                      - Hindi (Professional proficiency) <br />
@@ -292,7 +292,7 @@ export default function About() {
                     transition={{ duration: 0.55, delay: 0.08 }}
                     className="lg:col-span-5 rounded-[2.3rem] bg-[#022c22]/76 text-white border border-[#6ee7b7]/30 p-7 md:p-9 shadow-[0_22px_54px_rgba(2,44,34,0.24)] backdrop-blur-lg"
                 >
-                    <h3 className="text-3xl font-extrabold font-headline mb-6">Skills</h3>
+                    <h3 className="text-3xl font-extrabold font-doto mb-6">Skills</h3>
                     <div className="space-y-4 mb-7">
                         {focusAreas.map((item) => (
                             <div key={item.label}>
@@ -340,7 +340,7 @@ export default function About() {
                     transition={{ duration: 0.5 }}
                     className="lg:col-span-4 rounded-[2.3rem] border border-white/60 bg-white/40 backdrop-blur-lg p-7 md:p-9 shadow-[0_16px_40px_rgba(16,185,129,0.1)]"
                 >
-                    <h3 className="text-2xl md:text-3xl font-extrabold font-headline text-[#022c22]">Currently Working</h3>
+                    <h3 className="text-2xl md:text-3xl font-extrabold font-doto text-[#022c22]">Currently Working</h3>
                     <p className="mt-3 text-lg text-[#064e3b]/80 font-medium leading-relaxed">
                       • ServiceNow platform for application development, <br />• Automation of workflows, <br />• AI Systems and Intelligent Agents
 <br />• UI/UX and Product Design
@@ -354,7 +354,7 @@ export default function About() {
                     transition={{ duration: 0.5, delay: 0.08 }}
                     className="lg:col-span-8 rounded-[2.3rem] bg-white/40 border border-white/60 p-7 md:p-9 shadow-[0_18px_48px_rgba(16,185,129,0.1)] backdrop-blur-lg"
                 >
-                    <h3 className="text-3xl md:text-4xl font-extrabold font-headline text-[#022c22] mb-6">Education</h3>
+                    <h3 className="text-3xl md:text-4xl font-extrabold font-doto text-[#022c22] mb-6">Education</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {education.map((item) => (
                             <div key={item.institution} className="rounded-2xl bg-[#ecfdf5] border border-emerald-100/80 px-4 py-4">
@@ -376,7 +376,7 @@ export default function About() {
                     transition={{ duration: 0.5 }}
                     className="lg:col-span-8 rounded-[2.3rem] bg-white/72 border border-emerald-100/75 p-7 md:p-9 shadow-[0_18px_48px_rgba(16,185,129,0.08)] backdrop-blur-md"
                 >
-                    <h3 className="text-3xl md:text-4xl font-extrabold font-headline text-[#022c22] mb-7">Experiences</h3>
+                    <h3 className="text-3xl md:text-4xl font-extrabold font-doto text-[#022c22] mb-7">Experiences</h3>
                     <div className="space-y-5">
                         {journey.map((item, index) => (
                             <div key={item.title} className="relative rounded-2xl bg-[#ecfdf5] border border-emerald-100/80 px-5 py-4">
@@ -397,7 +397,7 @@ export default function About() {
                     transition={{ duration: 0.5, delay: 0.1 }}
                     className="lg:col-span-4 rounded-[2.3rem] bg-[#10b981] text-white border border-emerald-300/40 p-7 md:p-9 shadow-[0_22px_55px_rgba(16,185,129,0.26)]"
                 >
-                    <h3 className="text-3xl font-extrabold font-headline mb-5">Credentials</h3>
+                    <h3 className="text-3xl font-extrabold font-doto mb-5">Credentials</h3>
                     <div className="space-y-4">
                         {certs.map((cert) => (
                             <div key={cert.name} className="rounded-2xl bg-white/15 border border-white/30 px-4 py-3">

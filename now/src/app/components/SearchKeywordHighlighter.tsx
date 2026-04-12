@@ -41,12 +41,12 @@ function shouldSkipNode(parent: Node | null): boolean {
 
 function buildTerms(rawQuery: string): string[] {
   const normalized = rawQuery.trim().toLowerCase();
-  if (!normalized) {
+  if (!normalized || normalized.length < 2) {
     return [];
   }
 
-  // Match exactly what user typed, like Ctrl+F behavior.
-  return [normalized];
+  const tokens = normalized.split(/\s+/).filter((token) => token.length > 1);
+  return [...new Set([normalized, ...tokens])];
 }
 
 function applyHighlights(query: string) {
@@ -63,9 +63,10 @@ function applyHighlights(query: string) {
   const pattern = new RegExp(`(${terms.map(escapeRegex).join("|")})`, "gi");
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
   let matchCount = 0;
+  const MAX_MATCHES = 140;
 
   while (walker.nextNode()) {
-    if (matchCount >= 24) {
+    if (matchCount >= MAX_MATCHES) {
       break;
     }
 
@@ -124,13 +125,32 @@ export default function SearchKeywordHighlighter() {
       return;
     }
 
+    let timeout: number | undefined;
+    let idleId: number | undefined;
+
+    const scheduleHighlight = () => {
+      if ("requestIdleCallback" in window) {
+        idleId = (window as Window & { requestIdleCallback: (callback: IdleRequestCallback, options?: IdleRequestOptions) => number }).requestIdleCallback(
+          () => applyHighlights(query),
+          { timeout: 180 },
+        );
+      } else {
+        timeout = window.setTimeout(() => {
+          applyHighlights(query);
+        }, 120);
+      }
+    };
+
     // Delay slightly so route transition and hash scrolling can settle first.
-    const timeout = window.setTimeout(() => {
-      applyHighlights(query);
-    }, 120);
+    timeout = window.setTimeout(scheduleHighlight, 80);
 
     return () => {
-      window.clearTimeout(timeout);
+      if (timeout) {
+        window.clearTimeout(timeout);
+      }
+      if (idleId && "cancelIdleCallback" in window) {
+        (window as Window & { cancelIdleCallback: (handle: number) => void }).cancelIdleCallback(idleId);
+      }
       clearHighlights();
     };
   }, [pathname, searchParams]);
