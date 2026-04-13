@@ -127,10 +127,14 @@ export default function SearchKeywordHighlighter() {
 
     let timeout: number | undefined;
     let idleId: number | undefined;
+    const idleWindow = window as Window & {
+      requestIdleCallback?: (callback: IdleRequestCallback, options?: IdleRequestOptions) => number;
+      cancelIdleCallback?: (handle: number) => void;
+    };
 
     const scheduleHighlight = () => {
-      if ("requestIdleCallback" in window) {
-        idleId = (window as Window & { requestIdleCallback: (callback: IdleRequestCallback, options?: IdleRequestOptions) => number }).requestIdleCallback(
+      if (typeof idleWindow.requestIdleCallback === "function") {
+        idleId = idleWindow.requestIdleCallback(
           () => applyHighlights(query),
           { timeout: 180 },
         );
@@ -148,8 +152,8 @@ export default function SearchKeywordHighlighter() {
       if (timeout) {
         window.clearTimeout(timeout);
       }
-      if (idleId && "cancelIdleCallback" in window) {
-        (window as Window & { cancelIdleCallback: (handle: number) => void }).cancelIdleCallback(idleId);
+      if (idleId && typeof idleWindow.cancelIdleCallback === "function") {
+        idleWindow.cancelIdleCallback(idleId);
       }
       clearHighlights();
     };
