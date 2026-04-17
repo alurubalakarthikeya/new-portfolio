@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import bush2 from "../assets/forest assets/pixelated_bush_v2.png";
-import creeper1 from "../assets/forest assets/creeper-1.png";
 import pixelatedArrow from "../assets/imgs/pixelated_arrow.png";
 
 type SearchEntry = {
@@ -14,7 +13,7 @@ type SearchEntry = {
   keywords: string[];
 };
 
-const SEARCHABLE_SELECTOR = "h1,h2,h3,h4,h5,h6,p,li,span,a,button,label,dt,dd";
+const MAX_DYNAMIC_ENTRIES = 320;
 
 const searchIndex: SearchEntry[] = [
   {
@@ -162,21 +161,7 @@ function getNearestAnchor(element: Element, pathname: string): string {
   return pathname;
 }
 
-function isElementVisible(element: HTMLElement): boolean {
-  const style = window.getComputedStyle(element);
-  if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) {
-    return false;
-  }
-
-  const rect = element.getBoundingClientRect();
-  if (rect.width < 1 || rect.height < 1) {
-    return false;
-  }
-
-  return rect.bottom >= 0 && rect.top <= window.innerHeight;
-}
-
-function collectVisibleEntries(pathname: string): SearchEntry[] {
+function collectPageEntries(pathname: string): SearchEntry[] {
   const root = document.querySelector("main");
   if (!root) {
     return [];
@@ -184,20 +169,32 @@ function collectVisibleEntries(pathname: string): SearchEntry[] {
 
   const seen = new Set<string>();
   const entries: SearchEntry[] = [];
-  const nodes = root.querySelectorAll<HTMLElement>(SEARCHABLE_SELECTOR);
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
 
-  for (const node of nodes) {
-    if (!isElementVisible(node)) {
+  while (walker.nextNode()) {
+    if (entries.length >= MAX_DYNAMIC_ENTRIES) {
+      break;
+    }
+
+    const current = walker.currentNode;
+    const parent = current.parentElement;
+    if (!parent) {
       continue;
     }
 
-    const text = (node.textContent ?? "").replace(/\s+/g, " ").trim();
+    const tag = parent.tagName;
+    if (["SCRIPT", "STYLE", "NOSCRIPT", "SVG", "CANVAS"].includes(tag)) {
+      continue;
+    }
+
+    const text = (current.nodeValue ?? "").replace(/\s+/g, " ").trim();
     if (text.length < 2) {
       continue;
     }
 
     const context = text.slice(0, 140);
-    const key = `${context.toLowerCase()}::${getNearestAnchor(node, pathname)}`;
+    const href = getNearestAnchor(parent, pathname);
+    const key = `${context.toLowerCase()}::${href}`;
     if (seen.has(key)) {
       continue;
     }
@@ -206,13 +203,9 @@ function collectVisibleEntries(pathname: string): SearchEntry[] {
     entries.push({
       label: context.slice(0, 44),
       context,
-      href: getNearestAnchor(node, pathname),
+      href,
       keywords: tokenize(context),
     });
-
-    if (entries.length >= 220) {
-      break;
-    }
   }
 
   return entries;
@@ -221,39 +214,54 @@ function collectVisibleEntries(pathname: string): SearchEntry[] {
 export default function HomeQuickSearch() {
   const router = useRouter();
   const pathname = usePathname();
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const [query, setQuery] = useState("");
-  const [visibleIndex, setVisibleIndex] = useState<SearchEntry[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [pageIndex, setPageIndex] = useState<SearchEntry[]>([]);
 
   useEffect(() => {
-    let rafId = 0;
-    let timeoutId: number | undefined;
-
     const updateIndex = () => {
-      setVisibleIndex(collectVisibleEntries(pathname));
+      setPageIndex(collectPageEntries(pathname));
     };
 
-    const scheduleUpdate = () => {
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-      }
-      rafId = requestAnimationFrame(updateIndex);
-    };
-
-    timeoutId = window.setTimeout(updateIndex, 80);
-    window.addEventListener("resize", scheduleUpdate);
-    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    const timeoutId = window.setTimeout(updateIndex, 60);
+    window.addEventListener("resize", updateIndex, { passive: true });
 
     return () => {
       if (timeoutId) {
         window.clearTimeout(timeoutId);
       }
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-      }
-      window.removeEventListener("resize", scheduleUpdate);
-      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", updateIndex);
     };
   }, [pathname]);
+
+  useEffect(() => {
+    const onPointerDown = (event: PointerEvent) => {
+      if (!containerRef.current) {
+        return;
+      }
+
+      if (containerRef.current.contains(event.target as Node)) {
+        return;
+      }
+
+      setIsOpen(false);
+    };
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, []);
 
   const matches = useMemo(() => {
     const q = query.trim();
@@ -261,13 +269,22 @@ export default function HomeQuickSearch() {
       return [] as SearchEntry[];
     }
 
-    return [...searchIndex, ...visibleIndex]
+    const merged = [...searchIndex, ...pageIndex];
+    const deduped = new Map<string, SearchEntry>();
+    for (const entry of merged) {
+      const key = `${entry.href}::${entry.context.toLowerCase()}`;
+      if (!deduped.has(key)) {
+        deduped.set(key, entry);
+      }
+    }
+
+    return [...deduped.values()]
       .map((entry) => ({ entry, score: scoreEntry(entry, q) }))
       .filter((item) => item.score > 0)
       .sort((a, b) => b.score - a.score)
         .slice(0, 8)
       .map((item) => item.entry);
-  }, [query, visibleIndex]);
+  }, [query, pageIndex]);
 
   const buildSearchHref = (baseHref: string, term: string): string => {
     const cleanTerm = term.trim();
@@ -285,12 +302,13 @@ export default function HomeQuickSearch() {
     const href = explicitHref ?? matches[0]?.href;
 
     if (href) {
+      setIsOpen(false);
       router.push(buildSearchHref(href, value));
     }
   };
 
   return (
-    <div className="fixed top-5 left-1/2 -translate-x-1/2 z-40 w-[min(78vw,22rem)]">
+    <div ref={containerRef} className="fixed top-5 left-1/2 -translate-x-1/2 z-40 w-[min(78vw,22rem)]">
         <Image
           src={bush2}
           alt=""
@@ -305,8 +323,10 @@ export default function HomeQuickSearch() {
           id="home-search"
           type="text"
           value={query}
+          onFocus={() => setIsOpen(true)}
           onChange={(event) => {
             setQuery(event.target.value);
+            setIsOpen(true);
           }}
           onKeyDown={(event) => {
             if (event.key === "Enter") {
@@ -333,7 +353,7 @@ export default function HomeQuickSearch() {
           />
         </button>
       </div>
-      {query ? (
+      {query && isOpen ? (
         matches.length ? (
           <div className="mt-2 rounded-2xl border border-[#86efac]/45 bg-[#d1fae5]/45 backdrop-blur-2xl shadow-[0_7px_18px_rgba(5,150,105,0.1)] overflow-hidden">
             {matches.map((item) => (

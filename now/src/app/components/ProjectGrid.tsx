@@ -49,8 +49,6 @@ type ProjectRating = {
 
 const projectKeys: ProjectKey[] = ['calgpa', 'zephra', 'aether', 'miniminds', 'carsio', 'roledoc', 'textotest'];
 
-type FaceMood = 'angry' | 'sad' | 'happy' | 'excited';
-
 function createEmptyRatings(): Record<ProjectKey, ProjectRating> {
   return {
     calgpa: { count: 0, average: 0, starCounts: [0, 0, 0, 0, 0] },
@@ -63,52 +61,6 @@ function createEmptyRatings(): Record<ProjectKey, ProjectRating> {
   };
 }
 
-function RatingFace({ mood, strokeClass }: { mood: FaceMood; strokeClass: string }) {
-  if (mood === 'angry') {
-    return (
-      <svg viewBox="0 0 24 24" className={`h-8 w-8 ${strokeClass}`} fill="none" aria-hidden="true">
-        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
-        <path d="M7.4 9.1l2-1.1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-        <path d="M16.6 9.1l-2-1.1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-        <circle cx="9" cy="10.4" r="1" fill="currentColor" />
-        <circle cx="15" cy="10.4" r="1" fill="currentColor" />
-        <path d="M7.3 17c1.4-1.8 2.9-2.6 4.7-2.6s3.3.8 4.7 2.6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      </svg>
-    );
-  }
-
-  if (mood === 'sad') {
-    return (
-      <svg viewBox="0 0 24 24" className={`h-8 w-8 ${strokeClass}`} fill="none" aria-hidden="true">
-        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
-        <circle cx="9" cy="10" r="1" fill="currentColor" />
-        <circle cx="15" cy="10" r="1" fill="currentColor" />
-        <path d="M8 16.6c1.2-1.4 2.6-2.1 4-2.1s2.8.7 4 2.1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-        <path d="M16.2 11.4c0 1.1-.6 1.8-1.1 2.4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-      </svg>
-    );
-  }
-
-  if (mood === 'happy') {
-    return (
-      <svg viewBox="0 0 24 24" className={`h-8 w-8 ${strokeClass}`} fill="none" aria-hidden="true">
-        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
-        <path d="M8 9.7c.4.6.8.9 1.2.9s.8-.3 1.2-.9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-        <path d="M13.6 9.7c.4.6.8.9 1.2.9s.8-.3 1.2-.9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-        <path d="M7.4 14.7c1.5 2 3.1 3 4.6 3s3.1-1 4.6-3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg viewBox="0 0 24 24" className={`h-8 w-8 ${strokeClass}`} fill="none" aria-hidden="true">
-      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M7.6 10.2c.3.5.8.8 1.3.8s1-.3 1.3-.8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M13.8 10.2c.3.5.8.8 1.3.8s1-.3 1.3-.8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M7 14.4h10a5 5 0 0 1-10 0Z" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-    </svg>
-  );
-}
 
 function BracketButton({ onClick, label, inverse = false, className = '', iconClassName = '' }: BracketButtonProps) {
   return (
@@ -205,51 +157,29 @@ export default function ProjectGrid() {
 
   useEffect(() => {
     let stopped = false;
-    let intervalId: number | undefined;
 
     const fetchRatings = async () => {
-      if (document.visibilityState === 'hidden') {
-        return;
-      }
-
       try {
         const response = await fetch('/api/project-ratings', { cache: 'no-store' });
         if (!response.ok) {
           return;
         }
+
         const data = (await response.json()) as { ratings?: Partial<Record<ProjectKey, ProjectRating>> };
         if (!stopped && data.ratings) {
           setRatings((prev) => ({ ...prev, ...data.ratings }));
         }
       } catch {
-        // Ignore transient network/server issues for soft realtime updates.
+        // Ignore transient network errors.
       }
     };
 
     fetchRatings();
-
-    const startPolling = () => {
-      if (intervalId) {
-        window.clearInterval(intervalId);
-      }
-      intervalId = window.setInterval(fetchRatings, 12000);
-    };
-
-    const onVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        fetchRatings();
-      }
-    };
-
-    startPolling();
-    document.addEventListener('visibilitychange', onVisibilityChange);
+    const intervalId = window.setInterval(fetchRatings, 14000);
 
     return () => {
       stopped = true;
-      document.removeEventListener('visibilitychange', onVisibilityChange);
-      if (intervalId) {
-        window.clearInterval(intervalId);
-      }
+      window.clearInterval(intervalId);
     };
   }, []);
 
@@ -275,7 +205,7 @@ export default function ProjectGrid() {
         setRatings((prev) => ({ ...prev, ...data.ratings }));
       }
     } catch {
-      // Ignore submit errors to avoid breaking project popup interactions.
+      // Ignore submit errors to keep popup interactions smooth.
     } finally {
       setIsSubmittingRating(false);
     }
@@ -300,10 +230,11 @@ export default function ProjectGrid() {
   };
 
   const ratingChoices = [
-    { stars: 1, mood: 'angry' as FaceMood, color: 'text-rose-600 border-rose-300 bg-rose-50' },
-    { stars: 2, mood: 'sad' as FaceMood, color: 'text-orange-600 border-orange-300 bg-orange-50' },
-    { stars: 4, mood: 'happy' as FaceMood, color: 'text-emerald-600 border-emerald-300 bg-emerald-50' },
-    { stars: 5, mood: 'excited' as FaceMood, color: 'text-green-600 border-green-300 bg-green-50' },
+    { stars: 1, label: 'Poor', className: 'border-emerald-300/85 bg-emerald-400 text-white' },
+    { stars: 2, label: 'Fair', className: 'border-emerald-400/85 bg-emerald-500 text-white' },
+    { stars: 3, label: 'Good', className: 'border-emerald-500/85 bg-emerald-600 text-white' },
+    { stars: 4, label: 'Great', className: 'border-emerald-600/90 bg-emerald-700 text-white' },
+    { stars: 5, label: 'Elite', className: 'border-emerald-700/90 bg-emerald-800 text-white' },
   ] as const;
 
   const screenshots = {
@@ -412,7 +343,16 @@ export default function ProjectGrid() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.42 }}
-          className="rounded-[3rem] border border-white/60 bg-white/34 backdrop-blur-lg p-10 md:p-12 transition-all duration-300 hover:-translate-y-2 group flex flex-col h-[550px] overflow-hidden relative shadow-[0_20px_60px_rgba(16,185,129,0.14)] scroll-mt-28"
+          className="rounded-[3rem] border border-white/60 bg-white/34 backdrop-blur-lg p-10 md:p-12 transition-all duration-300 hover:-translate-y-2 group flex flex-col h-[550px] overflow-hidden relative shadow-[0_20px_60px_rgba(16,185,129,0.14)] scroll-mt-28 cursor-pointer"
+          onClick={() => setActiveProject('calgpa')}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              setActiveProject('calgpa');
+            }
+          }}
         >
             <BracketButton onClick={() => setActiveProject('calgpa')} label="Open CalGPA project details popup" />
           <div className="flex flex-col relative z-10 w-full mb-10 text-center items-center">
@@ -434,7 +374,16 @@ export default function ProjectGrid() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.42, delay: 0.07 }}
-          className="rounded-[3rem] border border-white/60 bg-white/34 backdrop-blur-lg p-10 md:p-12 transition-all duration-300 hover:-translate-y-2 group flex flex-col h-[550px] overflow-hidden relative shadow-[0_20px_60px_rgba(16,185,129,0.14)] scroll-mt-28"
+          className="rounded-[3rem] border border-white/60 bg-white/34 backdrop-blur-lg p-10 md:p-12 transition-all duration-300 hover:-translate-y-2 group flex flex-col h-[550px] overflow-hidden relative shadow-[0_20px_60px_rgba(16,185,129,0.14)] scroll-mt-28 cursor-pointer"
+          onClick={() => setActiveProject('zephra')}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              setActiveProject('zephra');
+            }
+          }}
         >
             <BracketButton onClick={() => setActiveProject('zephra')} label="Open Zephra project details popup" />
           <div className="flex flex-col relative z-10 w-full mb-10 text-center items-center">
@@ -456,7 +405,16 @@ export default function ProjectGrid() {
         whileInView={{ opacity: 1, scale: 1, y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
         transition={{ duration: 0.45 }}
-        className="relative rounded-[4rem] border border-[#d1fae5]/55 bg-[#10b981]/44 backdrop-blur-lg p-12 md:p-20 flex flex-col md:flex-row items-center gap-16 shadow-[0_20px_60px_rgba(16,185,129,0.24)] overflow-hidden scroll-mt-28"
+        className="relative rounded-[4rem] border border-[#d1fae5]/55 bg-[#10b981]/44 backdrop-blur-lg p-12 md:p-20 flex flex-col md:flex-row items-center gap-16 shadow-[0_20px_60px_rgba(16,185,129,0.24)] overflow-hidden scroll-mt-28 cursor-pointer"
+        onClick={() => setActiveProject('aether')}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            setActiveProject('aether');
+          }
+        }}
       >
         <BracketButton onClick={() => setActiveProject('aether')} label="Open Aether project details popup" inverse />
         <div className="md:w-1/2 relative z-10">
@@ -514,7 +472,16 @@ export default function ProjectGrid() {
             whileInView={{ opacity: 1, x: 0, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.36, ease: "easeOut", delay: isMobile ? index * 0.05 : 0 }}
-            className="relative rounded-[2.25rem] border border-white/60 bg-white/36 backdrop-blur-lg p-6 md:p-7 transition-all duration-300 hover:-translate-y-1.5 group flex flex-col min-h-[420px] shadow-[0_20px_60px_rgba(16,185,129,0.14)] scroll-mt-28 overflow-hidden"
+            className="relative rounded-[2.25rem] border border-white/60 bg-white/36 backdrop-blur-lg p-6 md:p-7 transition-all duration-300 hover:-translate-y-1.5 group flex flex-col min-h-[430px] shadow-[0_20px_60px_rgba(16,185,129,0.14)] scroll-mt-28 overflow-hidden cursor-pointer"
+            onClick={() => setActiveProject(item.key)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                setActiveProject(item.key);
+              }
+            }}
           >
             <BracketButton
               onClick={() => setActiveProject(item.key)}
@@ -535,7 +502,7 @@ export default function ProjectGrid() {
                 alt={`${item.name} mini mobile preview`}
                 accentClassName={item.accentClassName}
                 frameClassName="rounded-none"
-                imageClassName="object-[center_13%]"
+                imageClassName="object-cover object-top scale-[1.02]"
               />
             </div>
           </motion.div>
@@ -549,7 +516,7 @@ export default function ProjectGrid() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[1200] bg-[#052e24]/45 backdrop-blur-sm md:p-8"
+            className="fixed inset-0 z-30 bg-[#052e24]/28 backdrop-blur-[2px] px-2 pb-24 pt-20 md:px-8 md:pb-8 md:pt-24"
             onClick={() => setActiveProject(null)}
           >
             <motion.div
@@ -558,16 +525,15 @@ export default function ProjectGrid() {
               exit={{ opacity: 0, y: 16, scale: 0.99 }}
               transition={{ duration: 0.2 }}
               onClick={(event) => event.stopPropagation()}
-              className="relative h-full w-full md:mx-auto md:h-[88vh] md:max-w-5xl overflow-hidden bg-[#f7fefb] border border-emerald-100 md:rounded-[2.2rem] shadow-[0_26px_70px_rgba(6,78,59,0.16)]"
+              className="relative h-full w-full md:mx-auto md:h-[82vh] md:max-w-6xl overflow-hidden rounded-[2rem] border border-white/90 bg-white/76 backdrop-blur-md shadow-[0_24px_58px_rgba(6,78,59,0.14)]"
             >
-              <div className="pointer-events-none absolute -top-20 right-6 h-40 w-40 rounded-full bg-[#10b981]/10 blur-3xl" />
-              <div className="h-full overflow-y-auto no-scrollbar p-6 md:p-8">
-                <div className="flex items-start justify-between gap-4 mb-6">
-                  <div>
-                    <p className="text-[11px] tracking-[0.14em] uppercase text-emerald-800/70 font-bold">Project Spotlight</p>
-                    <h3 className="mt-1 text-3xl md:text-4xl font-black font-doto text-emerald-950 leading-tight">{selectedProject.name}</h3>
-                    {activeProject ? renderRatingSummary(activeProject) : null}
-                    <p className="mt-3 text-[15px] md:text-base text-emerald-900/85 max-w-2xl leading-relaxed">{selectedProject.description}</p>
+              <div className="pointer-events-none absolute -top-20 right-6 h-36 w-36 rounded-full bg-[#10b981]/8 blur-3xl" />
+              <div className="h-full overflow-y-auto p-4 md:p-6">
+                <div className="flex items-start justify-between gap-4 mb-4">
+                  <div className="pr-2">
+                    <p className="text-[10px] tracking-[0.16em] uppercase text-emerald-800/70 font-bold">Project Spotlight</p>
+                    <h3 className="mt-1 text-2xl md:text-3xl font-black font-doto text-emerald-950 leading-tight">{selectedProject.name}</h3>
+                    <p className="mt-2 text-sm md:text-[15px] text-emerald-900/85 max-w-3xl leading-relaxed">{selectedProject.description}</p>
                   </div>
                   <button
                     type="button"
@@ -579,9 +545,9 @@ export default function ProjectGrid() {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-[260px_1fr] gap-5 md:gap-6">
-                  <div className="rounded-[1.5rem] border border-emerald-100 bg-white p-4 shadow-[0_12px_28px_rgba(15,23,42,0.06)]">
-                    <div className="mx-auto relative overflow-hidden aspect-[9/19] w-[78%] sm:w-[58%] md:w-full max-w-[220px] rounded-[1.45rem] border-[7px] border-white shadow-[0_18px_30px_rgba(6,78,59,0.2)] bg-[#0f172a]/20">
+                <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-4 md:gap-5">
+                  <div className="rounded-[1.25rem] border border-white/80 bg-white/80 backdrop-blur-sm p-4 shadow-[0_10px_22px_rgba(15,23,42,0.08)]">
+                    <div className="mx-auto relative overflow-hidden aspect-[9/19] w-[68%] sm:w-[46%] lg:w-full max-w-[210px] rounded-[1.45rem] border-[7px] border-white shadow-[0_18px_30px_rgba(6,78,59,0.2)] bg-[#0f172a]/20">
                       <PhoneMockup
                         screenshotSrc={selectedScreenshot}
                         alt={`${selectedProject.name} popup preview`}
@@ -589,45 +555,48 @@ export default function ProjectGrid() {
                         frameClassName="rounded-none"
                       />
                     </div>
-                    <div className="mt-4 grid grid-cols-2 gap-2">
-                      <div className="rounded-xl border border-emerald-100 bg-emerald-50/70 px-3 py-2">
-                        <p className="text-[10px] uppercase tracking-[0.12em] text-emerald-800/70 font-bold">Year</p>
-                        <p className="text-sm font-bold text-emerald-950">{selectedProject.workedOn}</p>
-                      </div>
-                      <div className="rounded-xl border border-emerald-100 bg-emerald-50/70 px-3 py-2">
-                        <p className="text-[10px] uppercase tracking-[0.12em] text-emerald-800/70 font-bold">Role</p>
-                        <p className="text-sm font-bold text-emerald-950 line-clamp-2">{selectedProject.role}</p>
-                      </div>
-                    </div>
                   </div>
 
-                  <div className="rounded-[1.5rem] border border-emerald-100 bg-white p-5 md:p-6 shadow-[0_12px_28px_rgba(15,23,42,0.06)]">
-                    <p className="text-[11px] tracking-[0.14em] uppercase text-emerald-900/65 font-bold font-doto">Domain</p>
-                    <p className="mt-1 text-lg font-bold text-emerald-950">{selectedProject.domain}</p>
+                  <div className="rounded-[1.25rem] border border-white/80 bg-white/80 backdrop-blur-sm p-4 md:p-5 shadow-[0_10px_22px_rgba(15,23,42,0.08)]">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+                      <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 px-3 py-2">
+                        <p className="text-[10px] tracking-[0.12em] uppercase text-emerald-800/70 font-bold">Domain</p>
+                        <p className="mt-0.5 text-sm font-bold text-emerald-950">{selectedProject.domain}</p>
+                      </div>
+                      <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 px-3 py-2">
+                        <p className="text-[10px] tracking-[0.12em] uppercase text-emerald-800/70 font-bold">Community Rating</p>
+                        {activeProject ? renderRatingSummary(activeProject, true) : null}
+                      </div>
+                      <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 px-3 py-2">
+                        <p className="text-[10px] tracking-[0.12em] uppercase text-emerald-800/70 font-bold">Project Year</p>
+                        <p className="mt-0.5 text-sm font-bold text-emerald-950">{selectedProject.workedOn}</p>
+                      </div>
+                      <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 px-3 py-2">
+                        <p className="text-[10px] tracking-[0.12em] uppercase text-emerald-800/70 font-bold">Role</p>
+                        <p className="mt-0.5 text-sm font-bold text-emerald-950 line-clamp-2">{selectedProject.role}</p>
+                      </div>
+                    </div>
 
-                    <div className="mt-4">
-                      <p className="text-[10px] uppercase tracking-[0.12em] text-emerald-800/70 font-bold font-doto">How Was This Project?</p>
-
-                      <div className="mt-2 grid grid-cols-4 gap-2">
+                    <div className="mt-4 rounded-xl border border-emerald-100 bg-white p-3">
+                      <p className="text-[10px] uppercase tracking-[0.14em] text-emerald-800/85 font-bold">Rate This Project</p>
+                      <div className="mt-2 grid grid-cols-2 sm:grid-cols-5 gap-2">
                         {ratingChoices.map((entry) => (
                           <button
                             key={entry.stars}
                             type="button"
                             onClick={() => activeProject && submitRating(activeProject, entry.stars)}
                             disabled={isSubmittingRating}
-                            className="py-1 transition-transform hover:scale-110 disabled:opacity-60"
+                            className={`rounded-full border px-3 py-2 text-xs font-bold tracking-wide transition-all hover:-translate-y-0.5 disabled:opacity-65 ${entry.className}`}
                             aria-label={`Rate ${entry.stars} stars`}
                           >
-                            <span className={`mx-auto flex h-11 w-11 items-center justify-center rounded-full border ${entry.color}`}>
-                              <RatingFace mood={entry.mood} strokeClass="text-current" />
-                            </span>
+                            {entry.label}
                           </button>
                         ))}
                       </div>
                     </div>
 
-                    <h4 className="mt-5 text-sm tracking-[0.14em] uppercase font-bold font-doto text-emerald-900/80">Tech Stack</h4>
-                    <div className="mt-3 flex flex-wrap gap-2">
+                    <h4 className="mt-4 text-[11px] tracking-[0.14em] uppercase font-bold font-doto text-emerald-900/80">Tech Stack</h4>
+                    <div className="mt-2 flex flex-wrap gap-2">
                       {selectedProject.stack.map((tech) => (
                         <span key={tech} className="px-3 py-1.5 rounded-full text-sm font-medium bg-emerald-900/10 text-emerald-900 border border-emerald-700/15">
                           {tech}
@@ -635,7 +604,7 @@ export default function ProjectGrid() {
                       ))}
                     </div>
 
-                    <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <a
                         href={selectedProject.repoUrl}
                         target="_blank"

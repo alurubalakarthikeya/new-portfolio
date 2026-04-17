@@ -18,12 +18,12 @@ type HomeBackgroundProps = {
 
 const QUALITY_CONFIG = {
   default: {
-    pixelSize: 18,
+    pixelSize: 20,
     targetFrameMs: 1000 / 30,
     updateStride: 2,
   },
   lite: {
-    pixelSize: 22,
+    pixelSize: 24,
     targetFrameMs: 1000 / 22,
     updateStride: 3,
   },
@@ -159,14 +159,14 @@ export default function HomeBackground({ quality = "default" }: HomeBackgroundPr
     let lastPaintTime = 0;
     let framePartition = 0;
 
-    const desktopVelocity = { vx: 0.23, vy: 0.18 };
-    const mobileVelocity = { vx: 0.18, vy: 0.14 };
-
     const ball = {
-      x: window.innerWidth * 0.28,
-      y: window.innerHeight * 0.42,
-      vx: window.innerWidth < 768 ? mobileVelocity.vx : desktopVelocity.vx,
-      vy: window.innerWidth < 768 ? mobileVelocity.vy : desktopVelocity.vy,
+      x: window.innerWidth * 0.5,
+      y: window.innerHeight * 0.48,
+    };
+
+    const ballTarget = {
+      x: ball.x,
+      y: ball.y,
     };
 
     const render = (now: number) => {
@@ -189,38 +189,21 @@ export default function HomeBackground({ quality = "default" }: HomeBackgroundPr
       const height = window.innerHeight;
 
       const isMobile = width < 768;
-      const ballSize = isMobile ? pixelSize * 8.8 : pixelSize * 10.2;
       const ballRadius = isMobile ? pixelSize * 10.4 : pixelSize * 12;
 
-      const targetVx = isMobile ? mobileVelocity.vx : desktopVelocity.vx;
-      const targetVy = isMobile ? mobileVelocity.vy : desktopVelocity.vy;
       if (enableBallMotion) {
-        ball.vx = ball.vx >= 0 ? Math.abs(targetVx) : -Math.abs(targetVx);
-        ball.vy = ball.vy >= 0 ? Math.abs(targetVy) : -Math.abs(targetVy);
+        const xWave = Math.sin(now * 0.00038);
+        const yWave = Math.sin(now * 0.00057 + 1.15);
+        const xRadius = width * (isMobile ? 0.2 : 0.26);
+        const yRadius = height * (isMobile ? 0.16 : 0.22);
 
-        ball.x += ball.vx * dt;
-        ball.y += ball.vy * dt;
+        ballTarget.x = width * 0.5 + xWave * xRadius;
+        ballTarget.y = height * 0.5 + yWave * yRadius;
 
-        const minX = ballSize / 2;
-        const minY = ballSize / 2;
-        const maxX = width - ballSize / 2;
-        const maxY = height - ballSize / 2;
-
-        if (ball.x <= minX) {
-          ball.x = minX;
-          ball.vx = Math.abs(ball.vx);
-        } else if (ball.x >= maxX) {
-          ball.x = maxX;
-          ball.vx = -Math.abs(ball.vx);
-        }
-
-        if (ball.y <= minY) {
-          ball.y = minY;
-          ball.vy = Math.abs(ball.vy);
-        } else if (ball.y >= maxY) {
-          ball.y = maxY;
-          ball.vy = -Math.abs(ball.vy);
-        }
+        // Smooth follow keeps motion stable and removes visible jitter.
+        const follow = Math.min(1, dt * 0.018);
+        ball.x += (ballTarget.x - ball.x) * follow;
+        ball.y += (ballTarget.y - ball.y) * follow;
       } else {
         ball.x = width * 0.5;
         ball.y = height * 0.48;

@@ -5,18 +5,19 @@ import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 const CHAR_SEQUENCE = ["C", "A", "R", "T", "Y"] as const;
+const PIXEL_COUNT = 20;
 
 const CHAR_PIXELS: Record<(typeof CHAR_SEQUENCE)[number], number[]> = {
-  // Pixel index map (4x4):
-  //  0  1  2  3
-  //  4  5  6  7
-  //  8  9 10 11
-  // 12 13 14 15
-  C: [0, 1, 2, 3, 4, 8, 12, 13, 14, 15],
-  A: [0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 15],
-  R: [0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 14],
-  T: [0, 1, 2, 3, 6, 10, 14],
-  Y: [0, 3, 5, 6, 10, 14],
+  // Pixel index map (5x4):
+  //  0  1  2  3  4
+  //  5  6  7  8  9
+  // 10 11 12 13 14
+  // 15 16 17 18 19
+  C: [0, 1, 2, 3, 4, 5, 10, 15, 16, 17, 18, 19],
+  A: [0, 1, 2, 3, 4, 5, 9, 10, 11, 12, 13, 14, 15, 19],
+  R: [0, 1, 2, 3, 5, 9, 10, 11, 12, 13, 15, 18],
+  T: [0, 1, 2, 3, 4, 7, 12, 17],
+  Y: [0, 4, 6, 8, 12, 17],
 };
 
 export default function PageLoader() {
@@ -35,7 +36,6 @@ export default function PageLoader() {
       return;
     }
 
-    setCharIndex(0);
     const intervalId = window.setInterval(() => {
       setCharIndex((previous) => (previous + 1) % CHAR_SEQUENCE.length);
     }, 420);
@@ -134,13 +134,13 @@ export default function PageLoader() {
             transition={{ duration: 0.24, ease: "easeOut" }}
             className="relative z-10 rounded-[0.72rem] border border-[#34d399]/75 bg-transparent p-1.5 shadow-[0_10px_18px_rgba(6,95,70,0.16)]"
           >
-            <div className="grid grid-cols-4 gap-[2px]">
-              {Array.from({ length: 16 }, (_, pixelIndex) => {
+            <div className="grid grid-cols-5 gap-[2px]">
+              {Array.from({ length: PIXEL_COUNT }, (_, pixelIndex) => {
                 const isActive = activePixels.has(pixelIndex);
                 return (
                 <motion.span
                   key={pixelIndex}
-                  className="block h-[6px] w-[6px] rounded-[1px]"
+                  className="block h-[5px] w-[5px] rounded-[1px]"
                   animate={{
                     backgroundColor: isActive ? "#10b981" : "rgba(16,185,129,0.14)",
                     opacity: isActive ? 1 : 0.22,
