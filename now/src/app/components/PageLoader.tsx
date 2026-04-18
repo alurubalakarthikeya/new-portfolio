@@ -6,6 +6,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 const CHAR_SEQUENCE = ["C", "A", "R", "T", "Y"] as const;
 const PIXEL_COUNT = 20;
+const FIRST_VISIT_KEY = "portfolio-initial-load-complete-v1";
+const FIRST_VISIT_MIN_VISIBLE_MS = 900;
+const FIRST_VISIT_MAX_WAIT_MS = 7000;
+const ROUTE_TRANSITION_VISIBLE_MS = 220;
 
 const CHAR_PIXELS: Record<(typeof CHAR_SEQUENCE)[number], number[]> = {
   // Pixel index map (5x4):
@@ -19,6 +23,69 @@ const CHAR_PIXELS: Record<(typeof CHAR_SEQUENCE)[number], number[]> = {
   T: [0, 1, 2, 3, 4, 7, 12, 17],
   Y: [0, 4, 6, 8, 12, 17],
 };
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T | null> {
+  return new Promise((resolve) => {
+    const timeoutId = window.setTimeout(() => finish(null), timeoutMs);
+
+    const finish = (value: T | null) => {
+      window.clearTimeout(timeoutId);
+      resolve(value);
+    };
+
+    promise.then((value) => finish(value)).catch(() => finish(null));
+  });
+}
+
+function waitForWindowLoad(): Promise<void> {
+  if (document.readyState === "complete") {
+    return Promise.resolve();
+  }
+
+  return new Promise((resolve) => {
+    const onLoad = () => resolve();
+    window.addEventListener("load", onLoad, { once: true });
+  });
+}
+
+function waitForFontsReady(): Promise<void> {
+  const fontsApi = document.fonts;
+  if (!fontsApi) {
+    return Promise.resolve();
+  }
+
+  return fontsApi.ready.then(() => undefined).catch(() => undefined);
+}
+
+function waitForMountedImages(): Promise<void> {
+  const images = Array.from(document.images);
+  if (!images.length) {
+    return Promise.resolve();
+  }
+
+  const waiters = images.map((img) => {
+    if (img.complete && img.naturalWidth > 0) {
+      return Promise.resolve();
+    }
+
+    if (typeof img.decode === "function") {
+      return img.decode().then(() => undefined).catch(() => undefined);
+    }
+
+    return new Promise<void>((resolve) => {
+      const onDone = () => {
+        img.removeEventListener("load", onDone);
+        img.removeEventListener("error", onDone);
+        resolve();
+      };
+
+      img.addEventListener("load", onDone, { once: true });
+      img.addEventListener("error", onDone, { once: true });
+    });
+  });
+
+  return Promise.all(waiters).then(() => undefined);
+}
 
 export default function PageLoader() {
   const pathname = usePathname();
@@ -73,6 +140,7 @@ export default function PageLoader() {
         return;
       }
 
+      setCharIndex(0);
       setVisible(true);
     };
 
@@ -81,35 +149,61 @@ export default function PageLoader() {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
     let timeoutId: number | undefined;
 
-    const hideSoon = (delay: number) => {
+    const hideSoon = (delayMs: number) => {
       timeoutId = window.setTimeout(() => {
-        setVisible(false);
-      }, delay);
+        if (!cancelled) {
+          setVisible(false);
+        }
+      }, delayMs);
     };
 
-    if (firstRunRef.current) {
+    const run = async () => {
+      const isFirstRun = firstRunRef.current;
       firstRunRef.current = false;
 
-      if (document.readyState === "complete") {
-        hideSoon(560);
-      } else {
-        const onLoad = () => hideSoon(560);
-        window.addEventListener("load", onLoad, { once: true });
-        return () => {
-          window.removeEventListener("load", onLoad);
-          if (timeoutId) {
-            window.clearTimeout(timeoutId);
-          }
-        };
+      if (!isFirstRun) {
+        hideSoon(ROUTE_TRANSITION_VISIBLE_MS);
+        return;
       }
-    } else {
-      hideSoon(320);
-    }
+
+      let firstVisit = true;
+      try {
+        firstVisit = window.localStorage.getItem(FIRST_VISIT_KEY) !== "1";
+        if (firstVisit) {
+          window.localStorage.setItem(FIRST_VISIT_KEY, "1");
+        }
+      } catch {
+        firstVisit = true;
+      }
+
+      if (!firstVisit) {
+        hideSoon(ROUTE_TRANSITION_VISIBLE_MS);
+        return;
+      }
+
+      const start = performance.now();
+      await withTimeout(
+        Promise.all([waitForWindowLoad(), waitForFontsReady(), waitForMountedImages()]).then(() => undefined),
+        FIRST_VISIT_MAX_WAIT_MS
+      );
+
+      if (cancelled) {
+        return;
+      }
+
+      const elapsed = performance.now() - start;
+      const remaining = Math.max(0, FIRST_VISIT_MIN_VISIBLE_MS - elapsed);
+      hideSoon(remaining);
+    };
+
+    run();
 
     return () => {
-      if (timeoutId) {
+      cancelled = true;
+      if (timeoutId !== undefined) {
         window.clearTimeout(timeoutId);
       }
     };
@@ -123,7 +217,7 @@ export default function PageLoader() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="fixed inset-0 z-[10000] flex items-center justify-center overflow-hidden bg-[#d1fae5]/45 backdrop-blur-xl"
+          className="fixed inset-0 z-[10000] flex items-center justify-center overflow-hidden bg-[#d1fae5]/55 backdrop-blur-md"
           aria-hidden="true"
         >
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(16,185,129,0.24),transparent_40%),radial-gradient(circle_at_80%_75%,rgba(16,185,129,0.22),transparent_44%)]" />

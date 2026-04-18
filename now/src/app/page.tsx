@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Hero from "./components/Hero";
 import HomeBackground from "./components/HomeBackground";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faCode } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedinIn, faGithub, faXTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons";
 
 export const metadata: Metadata = {
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className="relative flex-1 flex flex-col justify-center overflow-hidden pb-28 md:pb-8 min-h-screen">
-      <HomeBackground />
+      <HomeBackground quality="lite" />
       <div className="relative z-10 flex-1 flex items-center">
         <Hero />
       </div>

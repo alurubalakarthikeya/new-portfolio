@@ -1,9 +1,8 @@
 {
   "calgpa": {
     "count": 1,
-    "sum": 5,
+    "sum": 4,
     "starCounts": [
-      0,
       0,
       0,
       0,
@@ -17,7 +16,6 @@
       0,
       0,
       0,
-      0,
       0
     ]
   },
@@ -28,37 +26,33 @@
       0,
       0,
       0,
-      0,
       0
     ]
   },
   "miniminds": {
-    "count": 0,
-    "sum": 0,
+    "count": 2,
+    "sum": 6,
     "starCounts": [
       0,
+      1,
       0,
-      0,
-      0,
-      0
+      1
     ]
   },
   "carsio": {
-    "count": 0,
-    "sum": 0,
+    "count": 1,
+    "sum": 4,
     "starCounts": [
       0,
       0,
       0,
-      0,
-      0
+      1
     ]
   },
   "roledoc": {
     "count": 0,
     "sum": 0,
     "starCounts": [
-      0,
       0,
       0,
       0,
@@ -69,7 +63,6 @@
     "count": 0,
     "sum": 0,
     "starCounts": [
-      0,
       0,
       0,
       0,

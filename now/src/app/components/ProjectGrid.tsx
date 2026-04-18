@@ -47,17 +47,15 @@ type ProjectRating = {
   starCounts: number[];
 };
 
-const projectKeys: ProjectKey[] = ['calgpa', 'zephra', 'aether', 'miniminds', 'carsio', 'roledoc', 'textotest'];
-
 function createEmptyRatings(): Record<ProjectKey, ProjectRating> {
   return {
-    calgpa: { count: 0, average: 0, starCounts: [0, 0, 0, 0, 0] },
-    zephra: { count: 0, average: 0, starCounts: [0, 0, 0, 0, 0] },
-    aether: { count: 0, average: 0, starCounts: [0, 0, 0, 0, 0] },
-    miniminds: { count: 0, average: 0, starCounts: [0, 0, 0, 0, 0] },
-    carsio: { count: 0, average: 0, starCounts: [0, 0, 0, 0, 0] },
-    roledoc: { count: 0, average: 0, starCounts: [0, 0, 0, 0, 0] },
-    textotest: { count: 0, average: 0, starCounts: [0, 0, 0, 0, 0] },
+    calgpa: { count: 0, average: 0, starCounts: [0, 0, 0, 0] },
+    zephra: { count: 0, average: 0, starCounts: [0, 0, 0, 0] },
+    aether: { count: 0, average: 0, starCounts: [0, 0, 0, 0] },
+    miniminds: { count: 0, average: 0, starCounts: [0, 0, 0, 0] },
+    carsio: { count: 0, average: 0, starCounts: [0, 0, 0, 0] },
+    roledoc: { count: 0, average: 0, starCounts: [0, 0, 0, 0] },
+    textotest: { count: 0, average: 0, starCounts: [0, 0, 0, 0] },
   };
 }
 
@@ -212,13 +210,13 @@ export default function ProjectGrid() {
   };
 
   const renderRatingSummary = (projectKey: ProjectKey, compact = false) => {
-    const stats = ratings[projectKey] ?? { count: 0, average: 0, starCounts: [0, 0, 0, 0, 0] };
+    const stats = ratings[projectKey] ?? { count: 0, average: 0, starCounts: [0, 0, 0, 0] };
     const filledStars = Math.round(stats.average);
 
     return (
       <div className={`mt-2 flex items-center gap-2 ${compact ? 'text-[11px]' : 'text-sm'}`}>
         <span className="inline-flex gap-[2px] text-[#10b981]">
-          {[0, 1, 2, 3, 4].map((star) => (
+          {[0, 1, 2, 3].map((star) => (
             <span key={star}>{star < filledStars ? '★' : '☆'}</span>
           ))}
         </span>
@@ -234,7 +232,6 @@ export default function ProjectGrid() {
     { stars: 2, label: 'Fair', className: 'border-emerald-400/85 bg-emerald-500 text-white' },
     { stars: 3, label: 'Good', className: 'border-emerald-500/85 bg-emerald-600 text-white' },
     { stars: 4, label: 'Great', className: 'border-emerald-600/90 bg-emerald-700 text-white' },
-    { stars: 5, label: 'Elite', className: 'border-emerald-700/90 bg-emerald-800 text-white' },
   ] as const;
 
   const screenshots = {
@@ -579,7 +576,7 @@ export default function ProjectGrid() {
 
                     <div className="mt-4 rounded-xl border border-emerald-100 bg-white p-3">
                       <p className="text-[10px] uppercase tracking-[0.14em] text-emerald-800/85 font-bold">Rate This Project</p>
-                      <div className="mt-2 grid grid-cols-2 sm:grid-cols-5 gap-2">
+                      <div className="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-2">
                         {ratingChoices.map((entry) => (
                           <button
                             key={entry.stars}
